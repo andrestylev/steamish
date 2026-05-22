@@ -1,0 +1,236 @@
+// =============================================================================
+// Steamish — Steam Palette Theme
+// =============================================================================
+
+// 1. Motiva Sans font import
+@import url('https://fonts.bunny.net/css?family=motiva-sans:300,400,500,700');
+
+// 2. Bootstrap variable overrides
+$primary: #1b2838;
+$secondary: #2a475e;
+$accent: #1a9fff;
+$body-bg: $primary;
+$body-color: #c7d5e0;
+
+$font-family-sans-serif: 'Motiva Sans', system-ui, -apple-system, sans-serif;
+
+$navbar-dark-color: #c7d5e0;
+$navbar-dark-hover-color: $accent;
+
+$link-color: $accent;
+$link-hover-color: lighten($accent, 10%);
+
+$card-bg: $secondary;
+$card-border-color: darken($secondary, 5%);
+$card-color: #c7d5e0;
+
+$input-bg: #1b2838;
+$input-color: #c7d5e0;
+$input-border-color: #2a475e;
+$input-focus-border-color: $accent;
+$input-placeholder-color: #6b7f8e;
+
+$btn-primary-bg: $accent;
+$btn-primary-border: $accent;
+
+$nav-link-color: #c7d5e0;
+$nav-link-hover-color: $accent;
+
+$badge-bg: $accent;
+
+$list-group-bg: $secondary;
+$list-group-color: #c7d5e0;
+$list-group-border-color: darken($secondary, 5%);
+
+$dropdown-bg: $secondary;
+$dropdown-color: #c7d5e0;
+$dropdown-link-color: #c7d5e0;
+$dropdown-link-hover-color: $accent;
+$dropdown-link-hover-bg: rgba(0, 0, 0, 0.2);
+
+// Import Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// =============================================================================
+// 3. CSS Custom Properties (Steam palette)
+// =============================================================================
+:root {
+    --steam-bg: #1b2838;
+    --steam-secondary: #2a475e;
+    --steam-accent: #1a9fff;
+    --steam-text: #c7d5e0;
+    --steam-text-muted: #6b7f8e;
+    --steam-card-bg: #2a475e;
+    --steam-header-bg: #171a21;
+    --steam-footer-bg: #171a21;
+}
+
+// =============================================================================
+// 4. Custom utility classes
+// =============================================================================
+.bg-accent {
+    background-color: $accent;
+}
+
+.text-accent {
+    color: $accent;
+}
+
+.btn-accent {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #{$accent};
+    --bs-btn-border-color: #{$accent};
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #{lighten($accent, 8%)};
+    --bs-btn-hover-border-color: #{lighten($accent, 8%)};
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #{darken($accent, 8%)};
+    --bs-btn-active-border-color: #{darken($accent, 8%)};
+}
+
+// =============================================================================
+// 5. Layout
+// =============================================================================
+body {
+    background-color: var(--steam-bg);
+    color: var(--steam-text);
+    font-family: 'Motiva Sans', system-ui, -apple-system, sans-serif;
+}
+
+// =============================================================================
+// 6. Header
+// =============================================================================
+.header {
+    background-color: var(--steam-header-bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    .navbar-brand {
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+
+    .nav-link {
+        color: var(--steam-text);
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        transition: color 0.15s ease-in-out;
+
+        &:hover {
+            color: var(--steam-accent);
+        }
+    }
+
+    .search-input {
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--steam-text);
+        font-size: 0.85rem;
+
+        &::placeholder {
+            color: var(--steam-text-muted);
+        }
+
+        &:focus {
+            background-color: rgba(0, 0, 0, 0.4);
+            border-color: var(--steam-accent);
+            box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
+        }
+    }
+
+    .navbar-toggler {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(199,213,224,0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+}
+
+// =============================================================================
+// 7. Footer
+// =============================================================================
+.footer {
+    background-color: var(--steam-footer-bg);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+// =============================================================================
+// 8. Cards
+// =============================================================================
+.card {
+    background-color: var(--steam-card-bg);
+    border: 1px solid darken(#2a475e, 5%);
+    color: var(--steam-text);
+}
+
+// =============================================================================
+// 9. Forms
+// =============================================================================
+.form-control,
+.form-select {
+    background-color: var(--steam-bg);
+    border-color: var(--steam-secondary);
+    color: var(--steam-text);
+
+    &:focus {
+        background-color: var(--steam-bg);
+        border-color: var(--steam-accent);
+        color: var(--steam-text);
+        box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
+    }
+
+    &::placeholder {
+        color: var(--steam-text-muted);
+    }
+}
+
+// =============================================================================
+// 10. Responsive — minimum 320px viewport
+// =============================================================================
+@media (max-width: 576px) {
+    .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    h1.display-4 {
+        font-size: 2rem;
+    }
+
+    .header {
+        .navbar-brand {
+            font-size: 1.1rem;
+        }
+    }
+}
+
+// Ensure no overflow at 320px
+@media (max-width: 320px) {
+    html {
+        overflow-x: hidden;
+    }
+
+    body {
+        overflow-x: hidden;
+        min-width: 320px;
+    }
+
+    .container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .table-responsive {
+        font-size: 0.8rem;
+    }
+
+    // Ensure tappable targets are at least 44px
+    .btn,
+    .nav-link,
+    .navbar-toggler {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+}

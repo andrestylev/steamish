@@ -8,6 +8,9 @@
     "require": {
         "php": "^8.3",
         "laravel/framework": "^13.8",
+        "laravel/sanctum": "^4.0",
+        "inertiajs/inertia-laravel": "^2.0",
+        "tighten/ziggy": "^2.0",
         "laravel/tinker": "^3.0",
         "stripe/stripe-php": "^16"
     },

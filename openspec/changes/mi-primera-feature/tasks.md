@@ -35,10 +35,10 @@ Chain strategy: feature-branch-chain
 
 ## Phase 2: Auth & Layout
 
-- [ ] 2.1 Create `routes/auth.php`, Sanctum config, `app/Http/Controllers/ProfileController.php`
-- [ ] 2.2 Create `resources/js/Layouts/AuthenticatedLayout.jsx`, `GuestLayout.jsx`
-- [ ] 2.3 Create `resources/js/Components/Header.jsx` (logo, search, nav, cart badge), `Footer.jsx`
-- [ ] 2.4 Create `resources/sass/app.scss` with Bootstrap import + Steam palette CSS vars (`#1b2838`, `#2a475e`, `#1a9fff`)
+- [x] 2.1 Create `routes/auth.php`, Sanctum config, `app/Http/Controllers/ProfileController.php`
+- [x] 2.2 Create `resources/js/Layouts/AuthenticatedLayout.jsx`, `GuestLayout.jsx`
+- [x] 2.3 Create `resources/js/Components/Header.jsx` (logo, search, nav, cart badge), `Footer.jsx`
+- [x] 2.4 Create `resources/sass/app.scss` with Bootstrap import + Steam palette CSS vars (`#1b2838`, `#2a475e`, `#1a9fff`)
 
 ## Phase 3: Home & Catalog
 
