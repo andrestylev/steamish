@@ -28,10 +28,10 @@ Chain strategy: feature-branch-chain
 
 ## Phase 1: Foundation
 
-- [ ] 1.1 Create 6 migrations: `games`, `reviews`, `purchases`, `cart_items`, `wishlist_items`, `game_images`
-- [ ] 1.2 Create models: `Game`, `Review`, `Purchase`, `CartItem`, `WishlistItem`, `GameImage` in `app/Models/` with relations, casts, scopes
-- [ ] 1.3 Create `app/Services/StripeService.php` + `config/stripe.php`
-- [ ] 1.4 Install npm deps: Bootstrap 5, `react-bootstrap`, Chart.js, `react-chartjs-2`, Stripe JS
+- [x] 1.1 Create 6 migrations: `games`, `reviews`, `purchases`, `cart_items`, `wishlist_items`, `game_images`
+- [x] 1.2 Create models: `Game`, `Review`, `Purchase`, `CartItem`, `WishlistItem`, `GameImage` in `app/Models/` with relations, casts, scopes
+- [x] 1.3 Create `app/Services/StripeService.php` + `config/stripe.php`
+- [x] 1.4 Install npm deps: Bootstrap 5, `react-bootstrap`, Chart.js, `react-chartjs-2`, Stripe JS
 
 ## Phase 2: Auth & Layout
 
