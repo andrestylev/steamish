@@ -56,9 +56,9 @@ Chain strategy: feature-branch-chain
 
 ## Phase 5: Wishlist & Reports
 
-- [ ] 5.1 Create `WishlistController` + `resources/js/Pages/Wishlist.jsx` (add/remove, move to cart)
-- [ ] 5.2 Create `AdminReportController` + `resources/js/Pages/Admin/Reports.jsx` + `ChartWidget.jsx` (3 Chart.js charts: top 10 bar, revenue-by-genre pie, monthly line)
-- [ ] 5.3 Create `UserReportController` + `resources/js/Pages/User/Stats.jsx` (top 5 played horizontal bar)
+- [x] 5.1 Create `WishlistController` + `resources/js/Pages/Wishlist.jsx` (add/remove, move to cart)
+- [x] 5.2 Create `AdminReportController` + `resources/js/Pages/Admin/Reports.jsx` + `ChartWidget.jsx` (3 Chart.js charts: top 10 bar, revenue-by-genre pie, monthly line)
+- [x] 5.3 Create `UserReportController` + `resources/js/Pages/User/Stats.jsx` (top 5 played horizontal bar)
 
 ## Phase 6: Seeders & Polish
 
