@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
+use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -15,21 +18,55 @@ class GameController extends Controller
      */
     public function show(string $slug): Response
     {
-        $games = $this->allGames();
-        $game = collect($games)->firstWhere('slug', $slug);
+        $hasDbData = Game::count() > 0;
 
-        if (! $game) {
-            abort(404);
+        if ($hasDbData) {
+            /** @var Game|null $game */
+            $game = Game::with(['images', 'reviews.user'])->where('slug', $slug)->first();
+
+            if (! $game) {
+                abort(404);
+            }
+
+            $gameArray = $game->toArray();
+            // Add gallery from game images
+            $gameArray['gallery'] = $game->images->sortBy('sort_order')->pluck('url')->toArray();
+            // Add screenshots from images for compatibility
+            $gameArray['screenshots'] = $gameArray['gallery'];
+
+            // Reviews with user info
+            $reviews = $game->reviews->map(function (Review $review) {
+                return [
+                    'id' => $review->id,
+                    'user' => [
+                        'name' => $review->user?->name ?? 'Unknown',
+                        'avatar' => $review->user?->avatar,
+                    ],
+                    'rating' => $review->rating,
+                    'body' => $review->body,
+                    'hours_played' => $review->hours_played,
+                    'is_recommended' => $review->is_recommended,
+                    'created_at' => $review->created_at?->toISOString(),
+                ];
+            })->toArray();
+        } else {
+            // Fallback to hardcoded data
+            $games = $this->allGames();
+            $gameArray = collect($games)->firstWhere('slug', $slug);
+
+            if (! $gameArray) {
+                abort(404);
+            }
+
+            // Add gallery from screenshots
+            $gameArray['gallery'] = $gameArray['screenshots'] ?? [];
+
+            // Sample reviews
+            $reviews = $this->sampleReviews($gameArray['id']);
         }
 
-        // Simulate gallery images from screenshots
-        $game['gallery'] = $game['screenshots'] ?? [];
-
-        // Simulate reviews
-        $reviews = $this->sampleReviews($game['id']);
-
         return Inertia::render('GameDetail', [
-            'game' => $game,
+            'game' => $gameArray,
             'reviews' => $reviews,
         ]);
     }
