@@ -186,7 +186,133 @@ body {
 }
 
 // =============================================================================
-// 10. Responsive — minimum 320px viewport
+// 10. Hero Carousel
+// =============================================================================
+#heroCarousel {
+    .carousel-indicators button {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        background-color: transparent;
+        opacity: 1;
+
+        &.active {
+            background-color: var(--steam-accent);
+            border-color: var(--steam-accent);
+        }
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+        width: 5%;
+    }
+
+    &:hover .carousel-control-prev,
+    &:hover .carousel-control-next {
+        opacity: 0.7;
+    }
+}
+
+// =============================================================================
+// 11. Game Card
+// =============================================================================
+.game-card {
+    background-color: var(--steam-card-bg);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.game-card-img {
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    background-color: darken(#2a475e, 5%);
+}
+
+// =============================================================================
+// 12. Catalog — Filter Sidebar
+// =============================================================================
+.filter-sidebar {
+    background-color: var(--steam-card-bg);
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.filter-checkbox {
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    transition: background-color 0.1s ease-in-out;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .form-check-input {
+        background-color: var(--steam-bg);
+        border-color: var(--steam-secondary);
+        cursor: pointer;
+
+        &:checked {
+            background-color: var(--steam-accent);
+            border-color: var(--steam-accent);
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
+            border-color: var(--steam-accent);
+        }
+    }
+}
+
+.filter-btn {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--steam-text);
+    text-align: left;
+    padding: 0.3rem 0.75rem;
+    font-size: 0.85rem;
+
+    &:hover {
+        border-color: var(--steam-accent);
+        color: var(--steam-text);
+        background-color: rgba(26, 159, 255, 0.1);
+    }
+
+    &.btn-outline-secondary {
+        background-color: transparent;
+    }
+}
+
+// =============================================================================
+// 13. Search Bar
+// =============================================================================
+.search-bar {
+    .input-group-text {
+        border-color: var(--steam-secondary);
+        color: var(--steam-text-muted);
+    }
+
+    .form-control {
+        border-left: none;
+
+        &:focus {
+            border-color: var(--steam-accent);
+            box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
+        }
+    }
+}
+
+// =============================================================================
+// 14. Responsive — minimum 320px viewport
 // =============================================================================
 @media (max-width: 576px) {
     .container {

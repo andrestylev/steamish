@@ -42,9 +42,9 @@ Chain strategy: feature-branch-chain
 
 ## Phase 3: Home & Catalog
 
-- [ ] 3.1 Create `HomeController` + `resources/js/Pages/Home.jsx` + `HeroCarousel.jsx` (5 featured games, cycling)
-- [ ] 3.2 Create `resources/js/Components/GameCard.jsx` (cover, price, discount strikethrough + badge)
-- [ ] 3.3 Create `CatalogController` + `resources/js/Pages/Catalog.jsx` + `SearchBar.jsx` + `FilterSidebar.jsx` (genre/price/platform/rating)
+- [x] 3.1 Create `HomeController` + `resources/js/Pages/Home.jsx` + `HeroCarousel.jsx` (5 featured games, cycling)
+- [x] 3.2 Create `resources/js/Components/GameCard.jsx` (cover, price, discount strikethrough + badge)
+- [x] 3.3 Create `CatalogController` + `resources/js/Pages/Catalog.jsx` + `SearchBar.jsx` + `FilterSidebar.jsx` (genre/price/platform/rating)
 
 ## Phase 4: Game Detail, Cart & Checkout
 
