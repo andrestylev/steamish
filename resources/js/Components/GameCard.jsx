@@ -21,7 +21,7 @@ export default function GameCard({ game }) {
     return (
         <div className="card game-card h-100 border-0">
             <div className="position-relative">
-                <Link href={route('catalog')}>
+                <Link href={route('games.show', { game: game.slug })}>
                     <img
                         src={game.cover}
                         alt={game.title}
@@ -36,7 +36,7 @@ export default function GameCard({ game }) {
                 )}
             </div>
             <div className="card-body p-2">
-                <Link href={route('catalog')} className="text-decoration-none">
+                <Link href={route('games.show', { game: game.slug })} className="text-decoration-none">
                     <h6 className="card-title text-white mb-1 small text-truncate">{game.title}</h6>
                 </Link>
                 <div className="d-flex align-items-center gap-1 mb-1">
