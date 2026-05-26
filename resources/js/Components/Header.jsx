@@ -1,8 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 
 export default function Header() {
-    const { auth } = usePage().props;
-    const cartCount = 0; // Will come from cart state in Phase 4
+    const { auth, cartCount } = usePage().props;
 
     return (
         <header className="header">
@@ -51,7 +50,12 @@ export default function Header() {
                             {auth.user ? (
                                 <>
                                     <li className="nav-item">
-                                        <Link href={route('cart')} className="nav-link position-relative">
+                                        <Link href={route('library.index')} className="nav-link">
+                                            Library
+                                        </Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link href={route('cart.index')} className="nav-link position-relative">
                                             Cart
                                             {cartCount > 0 && (
                                                 <span className="badge bg-accent ms-1">{cartCount}</span>

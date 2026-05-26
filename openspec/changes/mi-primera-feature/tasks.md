@@ -48,11 +48,11 @@ Chain strategy: feature-branch-chain
 
 ## Phase 4: Game Detail, Cart & Checkout
 
-- [ ] 4.1 Create `GameController` + `resources/js/Pages/GameDetail.jsx` with gallery, desc, system reqs, price, reviews
-- [ ] 4.2 Create `resources/js/Components/ReviewCard.jsx` + `StarRating.jsx` (1–5, only purchasers may review)
-- [ ] 4.3 Create `CartController` + `resources/js/Pages/Cart.jsx` + `CheckoutController` + `Checkout.jsx` (Stripe Checkout redirect)
-- [ ] 4.4 Create `StripeWebhookController` — signature verify via `Webhook::constructEvent()`, `Purchase::create()`, clear cart
-- [ ] 4.5 Create `LibraryController` + `resources/js/Pages/Library.jsx`
+- [x] 4.1 Create `GameController` + `resources/js/Pages/GameDetail.jsx` with gallery, desc, system reqs, price, reviews
+- [x] 4.2 Create `resources/js/Components/ReviewCard.jsx` + `StarRating.jsx` (1–5, only purchasers may review)
+- [x] 4.3 Create `CartController` + `resources/js/Pages/Cart.jsx` + `CheckoutController` + `Checkout.jsx` (Stripe Checkout redirect)
+- [x] 4.4 Create `StripeWebhookController` — signature verify via `Webhook::constructEvent()`, `Purchase::create()`, clear cart
+- [x] 4.5 Create `LibraryController` + `resources/js/Pages/Library.jsx`
 
 ## Phase 5: Wishlist & Reports
 
