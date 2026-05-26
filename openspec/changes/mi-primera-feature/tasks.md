@@ -69,8 +69,8 @@ Chain strategy: feature-branch-chain
 
 ## Phase 7: Testing (PHPUnit)
 
-- [ ] 7.1 Model tests: relations, `price:decimal` casts, `discounted`/`by_genre`/`search` scopes
-- [ ] 7.2 Auth tests: register, login, profile update, wrong password rejection
-- [ ] 7.3 Catalog tests: search by name, genre/price/platform filter combo, empty results
-- [ ] 7.4 Cart + Webhook tests: add/remove items, guest redirect, valid+invalid Stripe sig, purchase fulfillment
-- [ ] 7.5 Wishlist + Reports tests: toggle, list, remove; admin chart data query, empty states
+- [x] 7.1 Model tests: `GameTest` (11: relations, casts, `discounted`/`byGenre`/`search`/`byPlatform` scopes), `ReviewTest` (5: relations, casts), `PurchaseTest` (4: relations, cast, unique session)
+- [x] 7.2 Auth tests: `AuthTest` (9: register, login, profile update, validation errors, auth redirect)
+- [x] 7.3 Catalog tests: `CatalogTest` (8: search, genre/price/platform/rating filters, empty results, combined filters)
+- [x] 7.4 Cart + Webhook tests: `CartTest` (6: add/remove, duplicate prevention, guest redirect, subtotal), `StripeWebhookTest` (5: missing/invalid signature, valid event creates purchases + clears cart, idempotency)
+- [x] 7.5 Wishlist + Reports tests: `WishlistTest` (6: toggle, list, remove, empty state, guest redirect), `AdminReportsTest` (4: admin gate, populated/empty reports), `UserStatsTest` (3: auth guard, empty playtime, reviews with playtime)
