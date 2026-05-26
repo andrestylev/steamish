@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Game;
-use App\Models\WishlistItem;
 use App\Models\User;
+use App\Models\WishlistItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

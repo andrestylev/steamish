@@ -24,11 +24,12 @@ export default function GameDetail({ game, reviews }) {
 
     const handleSubmitReview = (e) => {
         e.preventDefault();
-        // Review submission will be implemented in a later phase
-        // For now, just log it
-        console.log('Review submitted:', data);
-        reset();
-        setShowReviewForm(false);
+        post(route('reviews.store', { game: game.id }), {
+            onSuccess: () => {
+                reset();
+                setShowReviewForm(false);
+            },
+        });
     };
 
     const displayPrice = () => {

@@ -8,6 +8,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\WishlistController;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog');
 Route::get('/games/{game:slug}', [GameController::class, 'show'])->name('games.show');
+Route::post('/games/{game}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
 // Auth routes (login, register, logout)
 require __DIR__.'/auth.php';

@@ -6,6 +6,7 @@ use App\Models\Game;
 use App\Models\Purchase;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Purchase>
@@ -22,7 +23,7 @@ class PurchaseFactory extends Factory
         return [
             'user_id' => User::factory(),
             'game_id' => Game::factory(),
-            'stripe_session_id' => 'cs_test_' . fake()->unique()->regexify('[a-z0-9]{24}'),
+            'stripe_session_id' => 'cs_test_' . Str::random(24),
             'amount_paid' => fake()->randomFloat(2, 9.99, 69.99),
         ];
     }
