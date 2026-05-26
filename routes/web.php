@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CheckoutController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +49,15 @@ Route::middleware('auth')->group(function (): void {
     // Library
     Route::get('/library', [LibraryController::class, 'index'])->name('library.index');
 
-    // Wishlist (placeholder route — to be implemented in Phase 5)
+    // Wishlist
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/{gameId}', [WishlistController::class, 'toggle'])->name('wishlist.toggle')->whereNumber('gameId');
+
+    // Admin reports (admin gate)
+    Route::get('/admin/reports', [AdminReportController::class, 'index'])
+        ->name('admin.reports')
+        ->middleware('can:admin');
+
+    // User stats
+    Route::get('/my/stats', [UserReportController::class, 'index'])->name('user.stats');
 });
