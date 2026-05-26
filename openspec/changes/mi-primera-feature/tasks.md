@@ -62,10 +62,10 @@ Chain strategy: feature-branch-chain
 
 ## Phase 6: Seeders & Polish
 
-- [ ] 6.1 Create `database/seeders/GameSeeder.php`: demo user `demo@steamish.test`/`password`, 20+ games (4 genres), 50+ reviews, 10+ purchases with playtime
-- [ ] 6.2 Update `database/seeders/DatabaseSeeder.php` to call `GameSeeder`
-- [ ] 6.3 Complete `routes/web.php` with all route definitions from design route map
-- [ ] 6.4 Responsive verification: 320px viewport no overflow, tappable targets
+- [x] 6.1 Create `database/seeders/GameSeeder.php`: demo user `demo@steamish.test`/`password`, 20+ games (4 genres), 50+ reviews, 10+ purchases with playtime
+- [x] 6.2 Update `database/seeders/DatabaseSeeder.php` to call `GameSeeder`
+- [x] 6.3 Complete `routes/web.php` with all route definitions from design route map
+- [x] 6.4 Responsive verification: 320px viewport no overflow, tappable targets
 
 ## Phase 7: Testing (PHPUnit)
 
