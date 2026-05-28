@@ -1,11 +1,9 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function Cart({ cartItems, subtotal, itemCount }) {
-    const { delete: destroy, processing } = useForm();
-
     const handleRemove = (itemId) => {
-        destroy(route('cart.remove', { item: itemId }));
+        router.delete(route('cart.remove', { item: itemId }));
     };
 
     const formatPrice = (price) => {
@@ -100,7 +98,6 @@ export default function Cart({ cartItems, subtotal, itemCount }) {
                                         <button
                                             className="btn btn-sm btn-outline-danger"
                                             onClick={() => handleRemove(item.id)}
-                                            disabled={processing}
                                             style={{ fontSize: '0.75rem' }}
                                             aria-label="Remove from cart"
                                         >

@@ -1,7 +1,8 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function Profile({ user }) {
+    const { isAdmin } = usePage().props;
     const { data, setData, put, processing, errors } = useForm({
         name: user.name || '',
         username: user.username || '',
@@ -20,6 +21,18 @@ export default function Profile({ user }) {
             <Head title="Profile" />
             <div className="container py-4" style={{ maxWidth: 600 }}>
                 <h2 className="mb-4 fw-bold">Edit Profile</h2>
+
+                <div className="d-flex gap-2 mb-4 flex-wrap">
+                    <Link href={route('user.stats')} className="btn btn-outline-accent">
+                        Ver estadísticas
+                    </Link>
+                    {isAdmin && (
+                        <Link href={route('admin.reports')} className="btn btn-accent">
+                            Dashboard Admin
+                        </Link>
+                    )}
+                </div>
+
                 <form onSubmit={submit}>
                     <div className="mb-3">
                         <label htmlFor="name" className="form-label">Display Name</label>

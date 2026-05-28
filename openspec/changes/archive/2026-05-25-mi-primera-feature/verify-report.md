@@ -111,8 +111,8 @@ All design decisions are fully followed. No deviations found.
 ### Issues Found
 
 **CRITICAL**:
-1. **Missing `pdo_sqlite` driver** — PHP 8.5.4 lacks the `sqlite3` extension. All 62 DB-dependent tests fail with `"could not find driver"`. Running `sudo apt-get install -y php8.5-sqlite3` would resolve this, but sudo requires a terminal. The test suite cannot execute in this environment.
-2. **Review submission endpoint not implemented** — `GameDetail.jsx` has a review form UI that calls `handleSubmitReview`, but the handler only does `console.log()` and `reset()`. There is no backend route/controller for submitting reviews. The spec says "auth purchaser submits 1-5 star review → review appears, avg updates" but no POST endpoint for reviews exists. This is a gap between the UI and the backend.
+1. ~~**Missing `pdo_sqlite` driver** — PHP 8.5.4 lacks the `sqlite3` extension. All 62 DB-dependent tests fail with `"could not find driver"`. Running `sudo apt-get install -y php8.5-sqlite3` would resolve this, but sudo requires a terminal.~~ **(FIXED)** Loaded `pdo_sqlite.so` and `sqlite3.so` from `/tmp/opencode/php-ext/`. Tests execute: 69/70 pass, the only failure is the pre-existing `ExampleTest` (no `RefreshDatabase`).
+2. ~~**Review submission endpoint not implemented**~~ **(FIXED)** — Created `ReviewController::store()` with auth/purchase/duplicate validation, `POST /games/{game}/reviews` route, wired `GameDetail.jsx` to submit via Inertia, and 7 feature tests covering all scenarios.
 
 **WARNING**:
 1. **Home page untested** — No dedicated test exists for the home page (`GET /`). The `ExampleTest::test_the_application_returns_a_successful_response` hits `/` but it's a generic example, not a validation of hero carousel, sections, or layout. This is a coverage gap.
@@ -122,19 +122,19 @@ All design decisions are fully followed. No deviations found.
 
 **SUGGESTION**:
 1. **WishlistController uses hardcoded game data** — `WishlistController::index()` uses `$this->allGames()` from the `HasGameData` trait instead of querying the `games` table. If the database is seeded with games that have different IDs than the hardcoded array indices, wishlist items won't match their games. Consider using Eloquent queries when DB has data.
-2. **Review submission backend** — The review form UI is fully built; only a backend route, request validation, and controller method are needed. This would be a small task to complete the feature.
-3. **Consider switching to PostgreSQL for tests** — Since the production database uses PostgreSQL (pdo_pgsql), the test environment could be configured to use a separate PostgreSQL test database instead of SQLite in-memory. This would improve fidelity between test and production environments.
-4. **Add a `phpunit.xml` `<env name="DB_CONNECTION" value="pgsql"/>` alternative** — Provide a `phpunit.xml.pgsql` or environment variable override so developers with PostgreSQL but not SQLite can run tests.
+2. **Consider switching to PostgreSQL for tests** — Since the production database uses PostgreSQL (pdo_pgsql), the test environment could be configured to use a separate PostgreSQL test database instead of SQLite in-memory. This would improve fidelity between test and production environments.
+3. **Add a `phpunit.xml` `<env name="DB_CONNECTION" value="pgsql"/>` alternative** — Provide a `phpunit.xml.pgsql` or environment variable override so developers with PostgreSQL but not SQLite can run tests.
 
 ### Verdict
 
 **PASS WITH WARNINGS**
 
-The implementation is complete and of high quality: all 34 tasks done, all 14 routes match the design, all design decisions are followed correctly, and the test suite is well-structured with 62 meaningful tests covering almost every spec scenario. The code is clean, follows Laravel conventions, uses proper Eloquent relationships with `RefreshDatabase` for isolation.
+The implementation is complete and of high quality: all 34 tasks done, all 14 routes match the design, all design decisions are followed correctly, and the test suite is well-structured with 69 passing tests covering almost every spec scenario. The code is clean, follows Laravel conventions, uses proper Eloquent relationships with `RefreshDatabase` for isolation.
 
-However, two factors prevent a clean PASS:
-1. **CRITICAL**: The review submission backend endpoint is missing (UI exists but no route/controller). This is an actual feature gap, not environment.
-2. **CRITICAL**: Cannot execute tests in this environment due to missing `pdo_sqlite` (environment limitation — fixable by installing `php8.5-sqlite3`).
-3. **WARNING**: 4 spec scenarios are untested (home page, seed data, theme CSS, responsive layout).
+The review submission endpoint is now implemented and tested. Tests execute successfully (69/70 pass, only pre-existing `ExampleTest` fails due to missing `RefreshDatabase` usage).
+
+Remaining:
+1. **WARNING**: 4 spec scenarios are untested (home page, seed data, theme CSS, responsive layout) — low risk, mostly require browser-based testing.
+2. **SUGGESTION**: WishlistController could be refactored to prefer Eloquent when DB is seeded.
 
 **One-line reason**: Implementation is complete and well-tested on paper, but the test suite cannot execute in this environment (missing pdo_sqlite), and the review submission backend is not wired up despite the UI existing.

@@ -18,24 +18,23 @@ class WishlistController extends Controller
      * Show the user's wishlist with game details.
      */
     public function index(): Response
-    {
-        $wishlistItems = WishlistItem::where('user_id', Auth::id())->get();
-        $allGames = $this->allGames();
-
-        $items = $wishlistItems->map(function ($item) use ($allGames) {
-            $gameData = collect($allGames)->firstWhere('id', $item->game_id);
+{
+    $items = WishlistItem::where('user_id', Auth::id())
+        ->with('game.images')
+        ->get()
+        ->map(function ($item) {
             return [
                 'id' => $item->id,
                 'game_id' => $item->game_id,
-                'game' => $gameData,
+                'game' => $item->game,
             ];
         })->values();
 
-        return Inertia::render('Wishlist', [
-            'items' => $items,
-            'totalItems' => $items->count(),
-        ]);
-    }
+    return Inertia::render('Wishlist', [
+        'items' => $items,
+        'totalItems' => $items->count(),
+    ]);
+}
 
     /**
      * Toggle a game in the user's wishlist.
@@ -43,12 +42,11 @@ class WishlistController extends Controller
     public function toggle(int $gameId): RedirectResponse
     {
         // Validate game exists in hardcoded data
-        $games = $this->allGames();
-        $game = collect($games)->firstWhere('id', $gameId);
+        $game = Game::find($gameId);
 
-        if (! $game) {
-            return redirect()->back()->with('error', __('Game not found.'));
-        }
+if (! $game) {
+    return redirect()->back()->with('error', __('Game not found.'));
+}
 
         $existing = WishlistItem::where('user_id', Auth::id())
             ->where('game_id', $gameId)

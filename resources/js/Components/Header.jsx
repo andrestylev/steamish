@@ -55,6 +55,11 @@ export default function Header() {
                                         </Link>
                                     </li>
                                     <li className="nav-item">
+                                        <Link href={route('wishlist.index')} className="nav-link">
+                                            Wishlist
+                                        </Link>
+                                    </li>
+                                    <li className="nav-item">
                                         <Link href={route('cart.index')} className="nav-link position-relative">
                                             Cart
                                             {cartCount > 0 && (

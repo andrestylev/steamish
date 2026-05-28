@@ -15,11 +15,11 @@ export default function GameDetail({ game, reviews }) {
     });
 
     const handleAddToCart = () => {
-        post(route('cart.add', { game: game.id }));
+        post(route('cart.add', { gameId: game.id }))
     };
 
     const handleToggleWishlist = () => {
-        post(route('wishlist.toggle', { game: game.id }));
+        post(route('wishlist.toggle', { gameId: game.id }))
     };
 
     const handleSubmitReview = (e) => {
@@ -84,7 +84,7 @@ export default function GameDetail({ game, reviews }) {
                         <div className="d-flex align-items-center gap-3">
                             <StarRating rating={game.rating_avg} size="md" />
                             <span className="text-secondary small">
-                                {game.rating_avg.toFixed(1)} ({game.rating_count.toLocaleString()} reviews)
+                                {parseFloat(game.rating_avg).toFixed(1)} ({game.rating_count.toLocaleString()} reviews)
                             </span>
                             {renderPlatformIcons(game.platforms)}
                         </div>

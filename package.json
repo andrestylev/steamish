@@ -12,15 +12,15 @@
         "vite": "^8.0.0"
     },
     "dependencies": {
+        "@inertiajs/react": "^2.3.24",
+        "@stripe/stripe-js": "^4.0",
         "bootstrap": "^5.3",
         "chart.js": "^4.4",
         "react": "^18.3.1",
-        "react-dom": "^18.3.1",
         "react-bootstrap": "^2.10",
         "react-chartjs-2": "^5.2",
+        "react-dom": "^18.3.1",
         "sass": "^1.80",
-        "@inertiajs/react": "^1.2",
-        "@stripe/stripe-js": "^4.0",
         "ziggy-js": "^2.0"
     }
 }

@@ -88,6 +88,17 @@ $dropdown-link-hover-bg: rgba(0, 0, 0, 0.2);
     --bs-btn-active-border-color: #{darken($accent, 8%)};
 }
 
+.btn-outline-accent {
+    --bs-btn-color: #{$accent};
+    --bs-btn-border-color: #{$accent};
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #{$accent};
+    --bs-btn-hover-border-color: #{$accent};
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #{darken($accent, 8%)};
+    --bs-btn-active-border-color: #{darken($accent, 8%)};
+}
+
 // =============================================================================
 // 5. Layout
 // =============================================================================

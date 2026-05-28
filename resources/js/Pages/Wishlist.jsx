@@ -2,17 +2,17 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function Wishlist({ items, totalItems }) {
-    const { delete: destroy, post, processing } = useForm();
+    const { post, processing } = useForm();
 
     const handleRemove = (gameId) => {
-        destroy(route('wishlist.toggle', { gameId }));
+        post(route('wishlist.toggle', { gameId }));
     };
 
     const handleMoveToCart = (gameId) => {
         post(route('cart.add', { gameId }), {
             onSuccess: () => {
-                // After adding to cart, optionally remove from wishlist
-                destroy(route('wishlist.toggle', { gameId }));
+                // After adding to cart, remove from wishlist via toggle
+                post(route('wishlist.toggle', { gameId }));
             },
         });
     };
