@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Game extends Model
 {
@@ -31,6 +33,11 @@ class Game extends Model
         'rating_count',
         'min_req',
         'rec_req',
+        // IGDB fields
+        'igdb_id',
+        'aggregated_rating',
+        'storyline',
+        'status',
     ];
 
     protected function casts(): array
@@ -73,6 +80,28 @@ class Game extends Model
         return $this->hasMany(GameImage::class);
     }
 
+    // Normalized pivot relations
+    public function genres(): BelongsToMany
+    {
+        return $this->belongsToMany(Genre::class, 'game_genre');
+    }
+
+    public function platforms(): BelongsToMany
+    {
+        return $this->belongsToMany(Platform::class, 'game_platform');
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'game_tag');
+    }
+
+    public function companies(): BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'game_company')
+            ->withPivot('role');
+    }
+
     // Scopes
     public function scopeDiscounted($query)
     {
@@ -81,6 +110,10 @@ class Game extends Model
 
     public function scopeByGenre($query, string $genre)
     {
+        if (DB::table('game_genre')->exists()) {
+            return $query->whereHas('genres', fn ($q) => $q->where('name', $genre));
+        }
+
         return $query->where('genre', $genre);
     }
 
@@ -91,6 +124,10 @@ class Game extends Model
 
     public function scopeByPlatform($query, string $platform)
     {
+        if (DB::table('game_platform')->exists()) {
+            return $query->whereHas('platforms', fn ($q) => $q->where('name', $platform));
+        }
+
         return $query->whereJsonContains('platforms', $platform);
     }
 
