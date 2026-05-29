@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Company;
 use App\Models\Game;
+use App\Models\Genre;
+use App\Models\Platform;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -45,6 +48,31 @@ class GameFactory extends Factory
             'min_req' => fake()->sentence(6),
             'rec_req' => fake()->sentence(6),
         ];
+    }
+
+    /**
+     * Configure the factory — attach random Genre/Platform/Company after creation.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Game $game) {
+            $genres = Genre::inRandomOrder()->take(rand(1, 3))->get();
+            $game->genres()->attach($genres);
+
+            $platforms = Platform::inRandomOrder()->take(rand(1, 4))->get();
+            $game->platforms()->attach($platforms);
+
+            if (fake()->boolean(70)) {
+                $company = Company::inRandomOrder()->first();
+                if ($company) {
+                    $game->companies()->attach($company, ['role' => 'developer']);
+                }
+            }
+
+            if (fake()->boolean(70) && ($publisher = Company::inRandomOrder()->first())) {
+                $game->companies()->attach($publisher, ['role' => 'publisher']);
+            }
+        });
     }
 
     /**
