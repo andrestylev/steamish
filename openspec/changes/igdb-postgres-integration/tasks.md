@@ -40,21 +40,21 @@ Chain strategy: feature-branch-chain
 
 ## Phase 3: Query Rewrites
 
-- [ ] 3.1 Modify `CatalogController.php` — genre filter via whereHas('genres'), platform via whereHas('platforms'); remove hardcoded arrays
-- [ ] 3.2 Modify `AdminReportController.php` — revenueByGenre joins game_genre pivot; monthly sales uses scopeMonthlySales
-- [ ] 3.3 Modify `HomeController.php` — genre extraction via Game::with('genres')->pluck pivot path
+- [x] 3.1 Modify `CatalogController.php` — genre filter via whereHas('genres'), platform via whereHas('platforms'); remove hardcoded arrays
+- [x] 3.2 Modify `AdminReportController.php` — revenueByGenre joins game_genre pivot; monthly sales uses scopeMonthlySales
+- [x] 3.3 Modify `HomeController.php` — genre extraction via Genre::all() instead of games.genre column
 
 ## Phase 4: Factory + Seeder + Config
 
-- [ ] 4.1 Modify `GameFactory.php` — afterCreating callback to attach random Genre/Platform from existing records
-- [ ] 4.2 Modify `GameSeeder.php` — remove hardcoded game array; keep demo user, reviews, purchases
-- [ ] 4.3 Modify `.env.example` — add DB_CONNECTION=pgsql, IGDB_CLIENT_ID, IGDB_CLIENT_SECRET
+- [x] 4.1 Modify `GameFactory.php` — afterCreating callback to attach random Genre/Platform from existing records
+- [x] 4.2 Modify `GameSeeder.php` — remove hardcoded game array; keep demo user, reviews, purchases
+- [x] 4.3 Modify `.env.example` — add DB_CONNECTION=pgsql, IGDB_CLIENT_ID, IGDB_CLIENT_SECRET
 
 ## Phase 5: Testing
 
 - [ ] 5.1 Unit: IgdbClient token refresh, rate-limit enforcement, 429 backoff, missing-cred abort (mock Guzzle)
 - [ ] 5.2 Unit: IgdbSyncCommand --game-limit, --fresh, step skipping, progress output (Http::fake)
-- [ ] 5.3 Integration: pivot relationships (Game::genres, ->platforms, ->tags, ->companies) via RefreshDatabase
-- [ ] 5.4 Feature: catalog filter returns correct results via whereHas on pivots
-- [ ] 5.5 Feature: admin report revenueByGenre joins pivot; monthly sales works on both drivers; empty-state renders
-- [ ] 5.6 Feature: seeder runs without games; igdb:sync → seeder creates user + purchases
+- [x] 5.3 Integration: pivot relationships (Game::genres, ->platforms, ->tags, ->companies) via RefreshDatabase
+- [x] 5.4 Feature: catalog filter returns correct results via whereHas on pivots
+- [x] 5.5 Feature: admin report revenueByGenre joins pivot; monthly sales works on both drivers; empty-state renders
+- [x] 5.6 Feature: seeder runs without games; seeder creates user + purchases

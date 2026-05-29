@@ -16,8 +16,8 @@ class NormalizedModelsTest extends TestCase
 
     public function test_genre_belongs_to_many_games(): void
     {
-        $genre = Genre::factory()->create();
         $game = Game::factory()->create();
+        $genre = Genre::factory()->create();
         $genre->games()->attach($game);
 
         $this->assertTrue($genre->games->contains($game));
@@ -26,9 +26,9 @@ class NormalizedModelsTest extends TestCase
 
     public function test_genre_can_have_multiple_games(): void
     {
-        $genre = Genre::factory()->create();
         $gameA = Game::factory()->create();
         $gameB = Game::factory()->create();
+        $genre = Genre::factory()->create();
         $genre->games()->attach([$gameA->id, $gameB->id]);
 
         $this->assertCount(2, $genre->games);
@@ -36,8 +36,8 @@ class NormalizedModelsTest extends TestCase
 
     public function test_platform_belongs_to_many_games(): void
     {
-        $platform = Platform::factory()->create();
         $game = Game::factory()->create();
+        $platform = Platform::factory()->create();
         $platform->games()->attach($game);
 
         $this->assertTrue($platform->games->contains($game));
@@ -46,8 +46,8 @@ class NormalizedModelsTest extends TestCase
 
     public function test_tag_belongs_to_many_games(): void
     {
-        $tag = Tag::factory()->create();
         $game = Game::factory()->create();
+        $tag = Tag::factory()->create();
         $tag->games()->attach($game);
 
         $this->assertTrue($tag->games->contains($game));
@@ -56,8 +56,8 @@ class NormalizedModelsTest extends TestCase
 
     public function test_company_belongs_to_many_games_with_role(): void
     {
-        $company = Company::factory()->create();
         $game = Game::factory()->create();
+        $company = Company::factory()->create();
         $company->games()->attach($game, ['role' => 'developer']);
 
         $this->assertTrue($company->games->contains($game));
@@ -67,8 +67,8 @@ class NormalizedModelsTest extends TestCase
 
     public function test_company_role_can_be_publisher(): void
     {
-        $company = Company::factory()->create();
         $game = Game::factory()->create();
+        $company = Company::factory()->create();
         $company->games()->attach($game, ['role' => 'publisher']);
 
         $this->assertEquals('publisher', $company->games->first()->pivot->role);
@@ -76,8 +76,8 @@ class NormalizedModelsTest extends TestCase
 
     public function test_company_pivot_defaults_to_developer(): void
     {
-        $company = Company::factory()->create();
         $game = Game::factory()->create();
+        $company = Company::factory()->create();
         $company->games()->attach($game);
 
         $this->assertEquals('developer', $company->games->first()->pivot->role);
