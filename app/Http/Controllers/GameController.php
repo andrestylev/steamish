@@ -22,13 +22,22 @@ class GameController extends Controller
 
         if ($hasDbData) {
             /** @var Game|null $game */
-            $game = Game::with(['images', 'reviews.user'])->where('slug', $slug)->first();
+            $game = Game::with(['images', 'reviews.user', 'platforms', 'genres', 'companies'])->where('slug', $slug)->first();
 
             if (! $game) {
                 abort(404);
             }
 
             $gameArray = $game->toArray();
+            // Map normalized pivot relations to frontend-compatible format
+            $gameArray['platforms'] = $game->platforms->pluck('slug')->toArray();
+            $gameArray['genre'] = $game->genres->pluck('name')->implode(', ');
+            $gameArray['developer'] = $game->companies->where('pivot.role', 'developer')->pluck('name')->first() ?? $gameArray['developer'];
+            $gameArray['publisher'] = $game->companies->where('pivot.role', 'publisher')->pluck('name')->first() ?? $gameArray['publisher'];
+            // Map description to about (IGDB sync fills description)
+            $gameArray['about'] = $gameArray['about'] ?? $gameArray['description'];
+            // Use cover as fallback for header
+            $gameArray['header'] = $gameArray['header'] ?? $gameArray['cover'];
             // Add gallery from game images
             $gameArray['gallery'] = $game->images->sortBy('sort_order')->pluck('url')->toArray();
             // Add screenshots from images for compatibility

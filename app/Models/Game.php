@@ -48,7 +48,6 @@ class Game extends Model
             'discount_pct' => 'integer',
             'is_discounted' => 'boolean',
             'release_date' => 'date',
-            'platforms' => 'array',
             'rating_avg' => 'decimal:2',
             'rating_count' => 'integer',
         ];
@@ -103,6 +102,16 @@ class Game extends Model
     }
 
     // Scopes
+    // Accessor: return loaded platforms relation instead of legacy column
+    public function getPlatformsAttribute(mixed $value): mixed
+    {
+        if ($this->relationLoaded('platforms')) {
+            return $this->getRelation('platforms');
+        }
+
+        return $value;
+    }
+
     public function scopeDiscounted($query)
     {
         return $query->where('is_discounted', true);
