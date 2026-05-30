@@ -1,7 +1,17 @@
+import { useEffect, useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 
 export default function Header() {
     const { auth, cartCount, wishlistCount } = usePage().props;
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        function onScroll() {
+            setScrolled(window.scrollY > 0);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
 
     function handleSearch(e) {
         e.preventDefault();
@@ -154,11 +164,18 @@ export default function Header() {
                                     </ul>
                                 </li>
                             ) : (
-                                <li className="nav-item">
-                                    <Link href={route('login')} className="nav-link">
-                                        Sign In
-                                    </Link>
-                                </li>
+                                <>
+                                    <li className="nav-item">
+                                        <Link href={route('register')} className="nav-link nav-register">
+                                            Register
+                                        </Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link href={route('login')} className="nav-link">
+                                            Sign In
+                                        </Link>
+                                    </li>
+                                </>
                             )}
                         </ul>
                     </div>
@@ -166,7 +183,7 @@ export default function Header() {
             </nav>
 
             {/* ── Sub Navbar: Search + Wishlist ── */}
-            <div className="subnav py-1">
+            <div className={`subnav py-1${scrolled ? ' subnav-scrolled' : ''}`}>
                 <div className="container d-flex align-items-center justify-content-end gap-2">
                     <form className="subnav-search-form" role="search" onSubmit={handleSearch}>
                         <div className="input-group input-group-sm">
