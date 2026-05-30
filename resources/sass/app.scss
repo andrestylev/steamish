@@ -133,19 +133,16 @@ body {
         }
     }
 
-    .nav-split {
-        .nav-split-main {
-            padding-right: 2px;
-        }
+    // Hover dropdowns: show menu on hover, keep link clickable
+    .dropdown:hover > .dropdown-menu {
+        display: block;
+    }
 
-        .nav-split-toggle {
-            padding-left: 2px;
-            cursor: pointer;
-
-            &::after {
-                margin-left: 0;
-            }
-        }
+    .dropdown-arrow {
+        display: inline-block;
+        margin-left: 2px;
+        vertical-align: middle;
+        opacity: 0.6;
     }
 
     .navbar-toggler {
