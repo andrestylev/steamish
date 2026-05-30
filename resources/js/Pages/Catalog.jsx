@@ -24,9 +24,13 @@ const SORT_OPTIONS = [
 ];
 
 export default function Catalog({ games = [], genres, platforms, priceRange, ratings, filters: serverFilters }) {
-    const [search, setSearch] = useState(serverFilters?.search || '');
+    // serverFilters can be [] (PHP request()->all() with no params).
+    // Normalize to plain object so array methods (like .sort) don't leak through.
+    const normFilters = serverFilters && !Array.isArray(serverFilters) ? serverFilters : {};
+
+    const [search, setSearch] = useState(normFilters.search || '');
     const [filters, setFilters] = useState(DEFAULT_FILTERS);
-    const [sortOrder, setSortOrder] = useState(serverFilters?.sort || '');
+    const [sortOrder, setSortOrder] = useState(normFilters.sort || '');
 
     const safeGames = Array.isArray(games) ? games : [];
 
@@ -37,8 +41,8 @@ export default function Catalog({ games = [], genres, platforms, priceRange, rat
         filters.minRating > 0;
 
     // On Sale and Coming Soon from URL override client filters
-    const serverOnSale = serverFilters?.on_sale;
-    const serverComingSoon = serverFilters?.coming_soon;
+    const serverOnSale = normFilters.on_sale;
+    const serverComingSoon = normFilters.coming_soon;
 
     const filteredGames = useMemo(() => {
         let result = [...safeGames];
