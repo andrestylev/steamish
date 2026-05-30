@@ -1,4 +1,6 @@
-# Admin Reports
+# Delta for Admin Reports
+
+## MODIFIED Requirements
 
 ### Requirement: Dashboard Charts
 
@@ -11,3 +13,7 @@ Three Chart.js charts (bar top 10, pie revenue by genre, line monthly sales). Al
 | 2 | admin no purchases | loads | empty-state messages shown |
 | 3 | `strftime` call detected in query | `AdminReportController` loads | query uses `DATE_TRUNC('month', purchases.created_at)` instead |
 | 4 | revenue-by-genre chart | loads | join goes through `game_genre` pivot table, not `games.genre` |
+
+## REMOVED Requirements
+
+None.

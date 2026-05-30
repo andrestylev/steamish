@@ -63,8 +63,9 @@ class GameRelationsTest extends TestCase
 
     public function test_by_genre_scope_uses_pivot_when_populated(): void
     {
-        $genre = Genre::factory()->create(['name' => 'Action']);
+        // Create game first (no genres exist yet — afterCreating attaches nothing)
         $game = Game::factory()->create(['genre' => 'Action']);
+        $genre = Genre::factory()->create(['name' => 'Action']);
         $game->genres()->attach($genre);
 
         $results = Game::byGenre('Action')->get();
@@ -87,8 +88,9 @@ class GameRelationsTest extends TestCase
 
     public function test_by_platform_scope_uses_pivot_when_populated(): void
     {
-        $platform = Platform::factory()->create(['name' => 'Windows']);
+        // Create game first (no platforms exist yet — afterCreating attaches nothing)
         $game = Game::factory()->create(['platforms' => ['windows']]);
+        $platform = Platform::factory()->create(['name' => 'Windows']);
         $game->platforms()->attach($platform);
 
         $results = Game::byPlatform('Windows')->get();

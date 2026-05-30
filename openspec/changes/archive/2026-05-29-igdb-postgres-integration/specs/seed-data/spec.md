@@ -1,4 +1,6 @@
-# Seed Data
+# Delta for Seed Data
+
+## MODIFIED Requirements
 
 ### Requirement: Seeder
 
@@ -9,3 +11,7 @@
 |---|-------|------|------|
 | 1 | fresh DB migrated | `db:seed` runs | demo user, reviews, and purchases exist; no games table populated |
 | 2 | fresh DB migrated | `igdb:sync` then `db:seed` | games populated by sync, demo user with reviews/purchases by seeder |
+
+## REMOVED Requirements
+
+None. The Seeder requirement is modified, not removed.

@@ -1,4 +1,6 @@
-# Game Catalog
+# Delta for Game Catalog
+
+## MODIFIED Requirements
 
 ### Requirement: Browsing
 
@@ -11,3 +13,7 @@ Real-time name search, filters (genre/price/platform/rating). Genre and platform
 | 2 | zero results | renders | "No games found" message |
 | 3 | user filters by genre "RPG" | catalog loads | only games linked via `game_genre` to that genre shown |
 | 4 | legacy `genre` column contains data but pivots empty | filter applied | fallback to legacy column, return empty results (expected post-migration gap) |
+
+## REMOVED Requirements
+
+None. The Browsing requirement is modified, not removed.
