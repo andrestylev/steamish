@@ -9,7 +9,7 @@ export default function Footer() {
                     <div className="col-lg-5 mb-4 mb-lg-0">
                         <div className="footer-brand mb-3">steamish</div>
                         <p className="footer-copyright small lh-lg">
-                            &copy; 2026 Valve Corporation. Todos los derechos reservados.
+                            &copy; 2026 Steamish Corporation. Todos los derechos reservados.
                             Todas las marcas registradas pertenecen a sus respectivos due&ntilde;os
                             en EE. UU. y otros pa&iacute;ses.
                             <br />

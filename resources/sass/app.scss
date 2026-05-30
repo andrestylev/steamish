@@ -354,6 +354,7 @@ body {
     border-radius: 4px;
     overflow: hidden;
     transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 
     &:hover {
