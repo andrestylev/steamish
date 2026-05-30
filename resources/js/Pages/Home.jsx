@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import HeroCarousel from '@/Components/HeroCarousel';
@@ -21,23 +22,35 @@ export default function Home({ featuredGames, newReleases, topRated, comingSoon,
 
             {/* Game Sections — only show sections with games */}
             <div className="container py-4">
-                {sections.filter((s) => s.games.length > 0).map((section) => (
-                    <section key={section.id} className="mb-5">
-                        <div className="d-flex align-items-center justify-content-between mb-3">
-                            <h2 className="h4 fw-bold mb-0">{section.title}</h2>
-                            <Link
-                                href={route('catalog', section.params)}
-                                className="text-accent text-decoration-none small"
-                            >
-                                View All &rarr;
-                            </Link>
-                        </div>
-                        <GameCarousel games={section.games} />
-                    </section>
+                {sections.filter((s) => s.games.length > 0).map((section, idx) => (
+                    <Fragment key={section.id}>
+                        <section className="mb-5">
+                            <div className="d-flex align-items-center justify-content-between mb-3">
+                                <h2 className="h4 fw-bold mb-0">{section.title}</h2>
+                                <Link
+                                    href={route('catalog', section.params)}
+                                    className="text-accent text-decoration-none small"
+                                >
+                                    View All &rarr;
+                                </Link>
+                            </div>
+                            <GameCarousel games={section.games} />
+                        </section>
+
+                        {/* Genre carousel right below On Sale */}
+                        {idx === 0 && genres?.length > 0 && (
+                            <section className="mb-5">
+                                <div className="d-flex align-items-center justify-content-between mb-3">
+                                    <h2 className="h4 fw-bold mb-0">Browse by Genre</h2>
+                                </div>
+                                <GenreCarousel genres={genres} />
+                            </section>
+                        )}
+                    </Fragment>
                 ))}
 
-                {/* Genre Carousel — always below game sections */}
-                {genres?.length > 0 && (
+                {/* Genre carousel also at the bottom if On Sale was empty/not shown */}
+                {sections.filter((s) => s.games.length > 0).length === 0 && genres?.length > 0 && (
                     <section className="mb-5">
                         <div className="d-flex align-items-center justify-content-between mb-3">
                             <h2 className="h4 fw-bold mb-0">Browse by Genre</h2>

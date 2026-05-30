@@ -53,8 +53,8 @@ export default function GenreCarousel({ genres }) {
         el.scrollBy({ left: dir * step, behavior: 'smooth' });
     }
 
-    const handleClick = (slug) => {
-        router.visit(route('catalog', { genre: slug }));
+    const handleClick = (name) => {
+        router.visit(route('catalog', { genre: name }));
     };
 
     return (
@@ -87,7 +87,7 @@ export default function GenreCarousel({ genres }) {
                     <button
                         key={genre.slug}
                         className="genre-card"
-                        onClick={() => handleClick(genre.slug)}
+                        onClick={() => handleClick(genre.name)}
                         style={{
                             background: GRADIENTS[genre.name] || FALLBACK,
                         }}
