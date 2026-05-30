@@ -34,61 +34,154 @@ export default function Header() {
                     </button>
 
                     <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav me-auto">
-                            <li className="nav-item">
-                                <Link href={route('home')} className="nav-link">
-                                    Home
-                                </Link>
+                        {/* Centered nav links with dropdowns */}
+                        <ul className="navbar-nav mx-auto">
+                            <li className="nav-item dropdown">
+                                <div className="d-flex align-items-center nav-split">
+                                    <Link href={route('home')} className="nav-link nav-split-main">
+                                        Home
+                                    </Link>
+                                    <span
+                                        className="nav-link nav-split-toggle dropdown-toggle"
+                                        data-bs-toggle="dropdown"
+                                        role="button"
+                                        aria-expanded="false"
+                                    />
+                                    <ul className="dropdown-menu">
+                                        <li>
+                                            <Link href={route('home')} className="dropdown-item fw-medium">
+                                                Featured
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href={route('catalog', { min_rating: 4 })} className="dropdown-item">
+                                                Top Rated
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href={route('home')} className="dropdown-item">
+                                                Coming Soon
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href={route('home')} className="dropdown-item">
+                                                On Sale
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
+
+                            <li className="nav-item dropdown">
+                                <div className="d-flex align-items-center nav-split">
+                                    <Link href={route('catalog')} className="nav-link nav-split-main">
+                                        Catalog
+                                    </Link>
+                                    <span
+                                        className="nav-link nav-split-toggle dropdown-toggle"
+                                        data-bs-toggle="dropdown"
+                                        role="button"
+                                        aria-expanded="false"
+                                    />
+                                    <ul className="dropdown-menu">
+                                        <li>
+                                            <Link href={route('catalog')} className="dropdown-item fw-medium">
+                                                All Games
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href={route('catalog', { min_rating: 4 })} className="dropdown-item">
+                                                Top Rated
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link href={route('catalog', { search: '' })} className="dropdown-item">
+                                                New Releases
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            {auth.user && (
+                                <li className="nav-item dropdown">
+                                    <div className="d-flex align-items-center nav-split">
+                                        <Link href={route('library.index')} className="nav-link nav-split-main">
+                                            Library
+                                        </Link>
+                                        <span
+                                            className="nav-link nav-split-toggle dropdown-toggle"
+                                            data-bs-toggle="dropdown"
+                                            role="button"
+                                            aria-expanded="false"
+                                        />
+                                        <ul className="dropdown-menu">
+                                            <li>
+                                                <Link href={route('library.index')} className="dropdown-item fw-medium">
+                                                    My Games
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link href={route('wishlist.index')} className="dropdown-item">
+                                                    Wishlist
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            )}
+
                             <li className="nav-item">
-                                <Link href={route('catalog')} className="nav-link">
-                                    Catalog
+                                <Link href={route('cart.index')} className="nav-link position-relative">
+                                    Cart
+                                    {cartCount > 0 && (
+                                        <span className="badge bg-accent ms-1">{cartCount}</span>
+                                    )}
                                 </Link>
                             </li>
                         </ul>
 
+                        {/* Right-aligned auth links */}
                         <ul className="navbar-nav">
                             {auth.user ? (
-                                <>
-                                    <li className="nav-item">
-                                        <Link href={route('library.index')} className="nav-link">
-                                            Library
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link href={route('wishlist.index')} className="nav-link">
-                                            Wishlist
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link href={route('cart.index')} className="nav-link position-relative">
-                                            Cart
-                                            {cartCount > 0 && (
-                                                <span className="badge bg-accent ms-1">{cartCount}</span>
-                                            )}
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link href={route('profile.edit')} className="nav-link">
+                                <li className="nav-item dropdown">
+                                    <div className="d-flex align-items-center nav-split">
+                                        <Link href={route('profile.edit')} className="nav-link nav-split-main">
                                             Profile
                                         </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link href={route('logout')} method="post" as="button" className="nav-link btn btn-link text-decoration-none">
-                                            Logout
-                                        </Link>
-                                    </li>
-                                </>
+                                        <span
+                                            className="nav-link nav-split-toggle dropdown-toggle"
+                                            data-bs-toggle="dropdown"
+                                            role="button"
+                                            aria-expanded="false"
+                                        />
+                                        <ul className="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <Link href={route('profile.edit')} className="dropdown-item">
+                                                    Settings
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <hr className="dropdown-divider" />
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    href={route('logout')}
+                                                    method="post"
+                                                    as="button"
+                                                    className="dropdown-item"
+                                                >
+                                                    Sign Out
+                                                </Link>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
                             ) : (
                                 <>
                                     <li className="nav-item">
                                         <Link href={route('login')} className="nav-link">
-                                            Login
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link href={route('register')} className="nav-link">
-                                            Register
+                                            Sign In
                                         </Link>
                                     </li>
                                 </>
@@ -98,17 +191,10 @@ export default function Header() {
                 </div>
             </nav>
 
-            {/* Sub Navbar — Wishlist + Search */}
+            {/* Sub Navbar — Search + Wishlist */}
             <div className="subnav py-1">
-                <div className="container d-flex align-items-center gap-3">
-                    <Link href={route('wishlist.index')} className="subnav-link d-flex align-items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                        </svg>
-                        Wishlist
-                    </Link>
-
-                    <form className="d-flex flex-grow-1" role="search" onSubmit={handleSearch}>
+                <div className="container d-flex align-items-center justify-content-end gap-2">
+                    <form className="subnav-search-form" role="search" onSubmit={handleSearch}>
                         <div className="input-group input-group-sm">
                             <input
                                 className="form-control subnav-search"
@@ -124,6 +210,13 @@ export default function Header() {
                             </button>
                         </div>
                     </form>
+
+                    <Link href={route('wishlist.index')} className="subnav-link d-flex align-items-center gap-1 text-nowrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                        </svg>
+                        Wishlist
+                    </Link>
                 </div>
             </div>
         </header>
