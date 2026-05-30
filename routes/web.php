@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function (): void {
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 
     // Library
     Route::get('/library', [LibraryController::class, 'index'])->name('library.index');
