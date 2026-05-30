@@ -118,14 +118,15 @@ body {
 
     .navbar-brand {
         font-weight: 700;
-        font-size: 1.25rem;
+        font-size: 1.6rem;
     }
 
     .nav-link {
         color: var(--steam-text);
-        font-weight: 500;
+        font-weight: 750;
         font-size: 0.9rem;
-        padding: 0.5rem 0.75rem;
+        padding: 2.1rem 0.75rem;
+        margin-right: 2rem;
         transition: color 0.15s ease-in-out;
 
         &:hover {
@@ -136,6 +137,8 @@ body {
     // Hover dropdowns: show menu on hover, keep link clickable
     .dropdown:hover > .dropdown-menu {
         display: block;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+        border-radius: 2px;
     }
 
     .dropdown-arrow {
@@ -143,6 +146,7 @@ body {
         margin-left: 2px;
         vertical-align: middle;
         opacity: 0.6;
+
     }
 
     .navbar-toggler {
@@ -165,7 +169,7 @@ body {
         color: var(--steam-text);
         font-size: 0.85rem;
         font-weight: 500;
-        padding: 0.4rem 0.75rem;
+        padding: 0.5rem 0.75rem;
         text-decoration: none;
         transition: color 0.15s ease-in-out;
 
@@ -203,27 +207,51 @@ body {
 .footer {
     background-color: var(--steam-footer-bg);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.85rem;
 
-    a {
+    .footer-brand {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #8f98a0;
+        letter-spacing: -0.02em;
+        user-select: none;
+    }
+
+    .footer-copyright {
+        color: var(--steam-text-muted);
+        max-width: 380px;
+    }
+
+    .footer-heading {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--steam-text-muted);
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-link {
         color: var(--steam-text-muted);
         text-decoration: none;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         transition: color 0.15s ease-in-out;
+        display: inline-block;
+        padding: 0.15rem 0;
 
         &:hover {
             color: var(--steam-accent);
         }
     }
-}
 
-.footer-link {
-    color: var(--steam-text-muted);
-    text-decoration: none;
-    font-size: 0.85rem;
-    transition: color 0.15s ease-in-out;
+    .footer-legal {
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        color: var(--steam-text-muted);
+    }
 
-    &:hover {
-        color: var(--steam-accent);
+    ul {
+        li {
+            line-height: 1.8;
+        }
     }
 }
 
