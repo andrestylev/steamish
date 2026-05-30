@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\Genre;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
@@ -34,6 +35,7 @@ class HomeController extends Controller
             'topRated' => $games->sortByDesc('rating_avg')->take(12)->values()->toArray(),
             'comingSoon' => $games->filter(fn ($g) => $g['coming_soon'])->take(12)->values()->toArray(),
             'onSale' => $games->filter(fn ($g) => $g['is_discounted'])->take(12)->values()->toArray(),
+            'genres' => Genre::all(['name', 'slug']),
         ]);
     }
 

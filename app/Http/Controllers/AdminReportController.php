@@ -29,11 +29,13 @@ class AdminReportController extends Controller
                 'total_revenue' => (float) ($game->total_revenue ?? 0),
             ]);
 
-        // Revenue grouped by genre
+        // Revenue grouped by genre via pivot
         $revenueByGenre = DB::table('purchases')
             ->join('games', 'purchases.game_id', '=', 'games.id')
-            ->select('games.genre', DB::raw('COALESCE(SUM(purchases.amount_paid), 0) as total_revenue'), DB::raw('COUNT(*) as total_sales'))
-            ->groupBy('games.genre')
+            ->join('game_genre', 'games.id', '=', 'game_genre.game_id')
+            ->join('genres', 'game_genre.genre_id', '=', 'genres.id')
+            ->select('genres.name as genre', DB::raw('COALESCE(SUM(purchases.amount_paid), 0) as total_revenue'), DB::raw('COUNT(*) as total_sales'))
+            ->groupBy('genres.name', 'genres.id')
             ->get()
             ->map(fn ($row) => [
                 'genre' => $row->genre,
@@ -41,21 +43,15 @@ class AdminReportController extends Controller
                 'total_sales' => (int) $row->total_sales,
             ]);
 
-        // Monthly sales for the last 12 months
-        $monthlySales = DB::table('purchases')
-            ->select(
-                DB::raw("strftime('%Y-%m', purchases.created_at) as month"),
-                DB::raw('COUNT(*) as total_sales'),
-                DB::raw('COALESCE(SUM(amount_paid), 0) as total_revenue')
-            )
-            ->where('purchases.created_at', '>=', now()->subMonths(12))
-            ->groupBy(DB::raw("strftime('%Y-%m', purchases.created_at)"))
-            ->orderBy('month')
+        // Monthly sales for the last 12 months (driver-detect via scope)
+        $monthlySales = Purchase::where('created_at', '>=', now()->subMonths(12))
+            ->monthlySales()
+            ->selectRaw('COUNT(*) as total_sales')
             ->get()
             ->map(fn ($row) => [
                 'month' => $row->month,
                 'total_sales' => (int) $row->total_sales,
-                'total_revenue' => (float) $row->total_revenue,
+                'total_revenue' => (float) ($row->total ?? 0),
             ]);
 
         return Inertia::render('Admin/Reports', [
