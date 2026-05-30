@@ -128,6 +128,7 @@ class CatalogController extends Controller
         $mainPlatformSlugs = ['pc', 'playstation', 'xbox', 'nintendo', 'mac', 'linux'];
         $mainPlatforms = Platform::whereIn('slug', $mainPlatformSlugs)
             ->get(['name', 'slug'])
+            ->unique('slug')
             ->map(fn ($p) => ['value' => $p->slug, 'label' => $p->name])
             ->values()
             ->toArray();
