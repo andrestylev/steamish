@@ -2,8 +2,9 @@ import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import HeroCarousel from '@/Components/HeroCarousel';
 import GameCarousel from '@/Components/GameCarousel';
+import GenreCarousel from '@/Components/GenreCarousel';
 
-export default function Home({ featuredGames, newReleases, topRated, comingSoon, onSale }) {
+export default function Home({ featuredGames, newReleases, topRated, comingSoon, onSale, genres }) {
     const sections = [
         { title: 'On Sale', games: onSale, id: 'on-sale', params: { on_sale: 1 } },
         { title: 'Top Rated', games: topRated, id: 'top-rated', params: { min_rating: 4 } },
@@ -34,6 +35,16 @@ export default function Home({ featuredGames, newReleases, topRated, comingSoon,
                         <GameCarousel games={section.games} />
                     </section>
                 ))}
+
+                {/* Genre Carousel — always below game sections */}
+                {genres?.length > 0 && (
+                    <section className="mb-5">
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                            <h2 className="h4 fw-bold mb-0">Browse by Genre</h2>
+                        </div>
+                        <GenreCarousel genres={genres} />
+                    </section>
+                )}
             </div>
         </GuestLayout>
     );
