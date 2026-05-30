@@ -34,6 +34,8 @@ class CatalogController extends Controller
 
         // Check if using Eloquent by testing for query builder
         if ($games instanceof \Illuminate\Database\Eloquent\Builder) {
+            $games->with('genres', 'platforms');
+
             if ($search) {
                 $games->where('title', 'like', "%{$search}%");
             }
@@ -60,8 +62,26 @@ class CatalogController extends Controller
             }
             if ($sort === 'newest') {
                 $games->orderBy('release_date', 'desc');
+            } elseif ($sort === 'price_asc') {
+                $games->orderBy('price', 'asc');
+            } elseif ($sort === 'price_desc') {
+                $games->orderBy('price', 'desc');
+            } elseif ($sort === 'name_asc') {
+                $games->orderBy('title', 'asc');
+            } elseif ($sort === 'name_desc') {
+                $games->orderBy('title', 'desc');
+            } elseif ($sort === 'rating') {
+                $games->orderBy('rating_avg', 'desc');
             }
             $games = $games->get();
+
+            // Normalize genre/platform fields for client-side filtering
+            $games = $games->map(function ($game) {
+                $g = $game->toArray();
+                $g['genre'] = $game->genres->first()?->name ?? $g['genre'] ?? null;
+                $g['platforms'] = $game->platforms->pluck('slug')->toArray();
+                return $g;
+            });
         } else {
             // Filter using collection
             $now = now();
@@ -91,23 +111,38 @@ class CatalogController extends Controller
             }
             if ($sort === 'newest') {
                 $games = $games->sortByDesc('release_date');
+            } elseif ($sort === 'price_asc') {
+                $games = $games->sortBy('price');
+            } elseif ($sort === 'price_desc') {
+                $games = $games->sortByDesc('price');
+            } elseif ($sort === 'name_asc') {
+                $games = $games->sortBy('title');
+            } elseif ($sort === 'name_desc') {
+                $games = $games->sortByDesc('title');
+            } elseif ($sort === 'rating') {
+                $games = $games->sortByDesc('rating_avg');
             }
         }
+
+        // Main platforms only for the filter sidebar
+        $mainPlatformSlugs = ['pc', 'playstation', 'xbox', 'nintendo', 'mac', 'linux'];
+        $mainPlatforms = Platform::whereIn('slug', $mainPlatformSlugs)
+            ->get(['name', 'slug'])
+            ->map(fn ($p) => ['value' => $p->slug, 'label' => $p->name])
+            ->values()
+            ->toArray();
+
+        // Compute price range for slider
+        $prices = collect($games)->pluck('price')->filter()->map('floatval');
+        $minGamePrice = floor($prices->min() ?? 0);
+        $maxGamePrice = ceil($prices->max() ?? 100);
 
         return Inertia::render('Catalog', [
             'games' => $games->values()->toArray(),
             'filters' => $request->only(['search', 'genre', 'platform', 'min_price', 'max_price', 'min_rating', 'on_sale', 'coming_soon', 'sort']),
             'genres' => Genre::all(['name'])->pluck('name')->toArray(),
-            'platforms' => Platform::all(['name', 'slug'])
-                ->map(fn ($p) => ['value' => $p->slug, 'label' => $p->name])
-                ->values()
-                ->toArray(),
-            'priceRanges' => [
-                ['label' => 'Under $10', 'min' => 0, 'max' => 10],
-                ['label' => '$10 - $30', 'min' => 10, 'max' => 30],
-                ['label' => '$30 - $50', 'min' => 30, 'max' => 50],
-                ['label' => '$50+', 'min' => 50, 'max' => null],
-            ],
+            'platforms' => $mainPlatforms,
+            'priceRange' => ['min' => $minGamePrice, 'max' => $maxGamePrice],
             'ratings' => [4, 3, 2, 1],
         ]);
     }

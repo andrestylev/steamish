@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import GameCard from '@/Components/GameCard';
 import SearchBar from '@/Components/SearchBar';
@@ -12,9 +12,21 @@ const DEFAULT_FILTERS = {
     minRating: 0,
 };
 
-export default function Catalog({ games, genres, platforms, priceRanges, ratings, filters: serverFilters }) {
+const SORT_OPTIONS = [
+    { value: '', label: 'Default' },
+    { value: 'name_asc', label: 'Name A–Z' },
+    { value: 'name_desc', label: 'Name Z–A' },
+    { value: 'price_asc', label: 'Price: Low to High' },
+    { value: 'price_desc', label: 'Price: High to Low' },
+    { value: 'newest', label: 'Newest' },
+    { value: 'coming_soon', label: 'Coming Soon' },
+    { value: 'rating', label: 'Top Rated' },
+];
+
+export default function Catalog({ games, genres, platforms, priceRange, ratings, filters: serverFilters }) {
     const [search, setSearch] = useState(serverFilters?.search || '');
     const [filters, setFilters] = useState(DEFAULT_FILTERS);
+    const [sort, setSort] = useState(serverFilters?.sort || '');
 
     const hasActiveFilters =
         filters.genres.length > 0 ||
@@ -22,42 +34,82 @@ export default function Catalog({ games, genres, platforms, priceRanges, ratings
         filters.platforms.length > 0 ||
         filters.minRating > 0;
 
+    // On Sale and Coming Soon from URL override client filters
+    const serverOnSale = serverFilters?.on_sale;
+    const serverComingSoon = serverFilters?.coming_soon;
+
     const filteredGames = useMemo(() => {
-        return games.filter((game) => {
-            // Search by name (case-insensitive)
-            if (search) {
-                const term = search.toLowerCase();
-                if (!game.title.toLowerCase().includes(term)) return false;
-            }
+        let result = [...games];
 
-            // Genre filter
-            if (filters.genres.length > 0 && (!game.genre || !filters.genres.includes(game.genre))) {
-                return false;
-            }
+        // Search
+        if (search) {
+            const term = search.toLowerCase();
+            result = result.filter((game) => game.title.toLowerCase().includes(term));
+        }
 
-            // Price filter
-            const price = parseFloat(game.price);
-            if (price === 0 && filters.priceRange.min !== null) {
-                // Free games — only include if min is 0
-                if (filters.priceRange.min > 0) return false;
-            } else {
-                if (filters.priceRange.min !== null && price < filters.priceRange.min) return false;
-                if (filters.priceRange.max !== null && price > filters.priceRange.max) return false;
-            }
+        // Genre
+        if (filters.genres.length > 0) {
+            result = result.filter((game) => {
+                const g = game.genre || '';
+                return filters.genres.some((fg) => g.toLowerCase() === fg.toLowerCase());
+            });
+        }
 
-            // Platform filter
-            if (filters.platforms.length > 0) {
+        // Price
+        const minP = filters.priceRange.min;
+        const maxP = filters.priceRange.max;
+        if (minP !== null || maxP !== null) {
+            result = result.filter((game) => {
+                const p = parseFloat(game.price);
+                if (p === 0) return minP === null || minP <= 0;
+                if (minP !== null && p < minP) return false;
+                if (maxP !== null && p > maxP) return false;
+                return true;
+            });
+        }
+
+        // Platform
+        if (filters.platforms.length > 0) {
+            result = result.filter((game) => {
                 const gamePlatforms = game.platforms || [];
-                const hasPlatform = filters.platforms.some((p) => gamePlatforms.includes(p));
-                if (!hasPlatform) return false;
+                return filters.platforms.some((p) => gamePlatforms.includes(p));
+            });
+        }
+
+        // Rating
+        if (filters.minRating > 0) {
+            result = result.filter((game) => game.rating_avg >= filters.minRating);
+        }
+
+        // Apply sort
+        if (sort) {
+            switch (sort) {
+                case 'name_asc':
+                    result.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+                case 'name_desc':
+                    result.sort((a, b) => b.title.localeCompare(a.title));
+                    break;
+                case 'price_asc':
+                    result.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+                    break;
+                case 'price_desc':
+                    result.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+                    break;
+                case 'newest':
+                    result.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+                    break;
+                case 'coming_soon':
+                    result.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
+                    break;
+                case 'rating':
+                    result.sort((a, b) => parseFloat(b.rating_avg) - parseFloat(a.rating_avg));
+                    break;
             }
+        }
 
-            // Rating filter
-            if (filters.minRating > 0 && game.rating_avg < filters.minRating) return false;
-
-            return true;
-        });
-    }, [games, search, filters]);
+        return result;
+    }, [games, search, filters, sort]);
 
     const clearFilters = () => {
         setFilters(DEFAULT_FILTERS);
@@ -80,7 +132,7 @@ export default function Catalog({ games, genres, platforms, priceRanges, ratings
                         <FilterSidebar
                             genres={genres}
                             platforms={platforms}
-                            priceRanges={priceRanges}
+                            priceRange={priceRange}
                             ratings={ratings}
                             filters={filters}
                             onFilterChange={setFilters}
@@ -91,19 +143,40 @@ export default function Catalog({ games, genres, platforms, priceRanges, ratings
 
                     {/* Game Grid */}
                     <div className="col-lg-9">
-                        {filteredGames.length > 0 ? (
-                            <>
-                                <p className="text-secondary small mb-3">
-                                    Showing {filteredGames.length} of {games.length} games
-                                </p>
-                                <div className="row g-3">
-                                    {filteredGames.map((game) => (
-                                        <div key={game.id} className="col-6 col-sm-4 col-lg-3">
-                                            <GameCard game={game} />
-                                        </div>
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                            <p className="text-secondary small mb-0">
+                                Showing {filteredGames.length} of {games.length} games
+                            </p>
+
+                            {/* Sort Dropdown */}
+                            <div className="d-flex align-items-center gap-2">
+                                <label htmlFor="sort-select" className="small text-secondary mb-0">
+                                    Sort by:
+                                </label>
+                                <select
+                                    id="sort-select"
+                                    className="form-select form-select-sm"
+                                    style={{ width: 'auto' }}
+                                    value={sort}
+                                    onChange={(e) => setSort(e.target.value)}
+                                >
+                                    {SORT_OPTIONS.map((opt) => (
+                                        <option key={opt.value} value={opt.value}>
+                                            {opt.label}
+                                        </option>
                                     ))}
-                                </div>
-                            </>
+                                </select>
+                            </div>
+                        </div>
+
+                        {filteredGames.length > 0 ? (
+                            <div className="row g-3">
+                                {filteredGames.map((game) => (
+                                    <div key={game.id} className="col-6 col-sm-4 col-lg-3">
+                                        <GameCard game={game} />
+                                    </div>
+                                ))}
+                            </div>
                         ) : (
                             <div className="text-center py-5">
                                 <div className="mb-3">
@@ -115,7 +188,7 @@ export default function Catalog({ games, genres, platforms, priceRanges, ratings
                                 <p className="text-secondary small mb-3">
                                     Try adjusting your search or filters to find what you are looking for.
                                 </p>
-                                {hasActiveFilters && (
+                                {(hasActiveFilters || search) && (
                                     <button className="btn btn-accent btn-sm" onClick={clearFilters}>
                                         Clear Filters
                                     </button>
