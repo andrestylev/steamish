@@ -28,6 +28,9 @@ class CatalogController extends Controller
         $minPrice = $request->input('min_price');
         $maxPrice = $request->input('max_price');
         $minRating = $request->input('min_rating');
+        $onSale = $request->input('on_sale');
+        $comingSoon = $request->input('coming_soon');
+        $sort = $request->input('sort');
 
         // Check if using Eloquent by testing for query builder
         if ($games instanceof \Illuminate\Database\Eloquent\Builder) {
@@ -49,9 +52,19 @@ class CatalogController extends Controller
             if ($minRating) {
                 $games->where('rating_avg', '>=', (float) $minRating);
             }
+            if ($onSale) {
+                $games->where('is_discounted', true);
+            }
+            if ($comingSoon) {
+                $games->where('release_date', '>', now());
+            }
+            if ($sort === 'newest') {
+                $games->orderBy('release_date', 'desc');
+            }
             $games = $games->get();
         } else {
             // Filter using collection
+            $now = now();
             if ($search) {
                 $games = $games->filter(fn ($g) => stripos($g['title'], $search) !== false);
             }
@@ -70,11 +83,20 @@ class CatalogController extends Controller
             if ($minRating) {
                 $games = $games->filter(fn ($g) => (float) $g['rating_avg'] >= (float) $minRating);
             }
+            if ($onSale) {
+                $games = $games->filter(fn ($g) => $g['is_discounted']);
+            }
+            if ($comingSoon) {
+                $games = $games->filter(fn ($g) => \Carbon\Carbon::parse($g['release_date'])->gt($now));
+            }
+            if ($sort === 'newest') {
+                $games = $games->sortByDesc('release_date');
+            }
         }
 
         return Inertia::render('Catalog', [
             'games' => $games->values()->toArray(),
-            'filters' => $request->only(['search', 'genre', 'platform', 'min_price', 'max_price', 'min_rating']),
+            'filters' => $request->only(['search', 'genre', 'platform', 'min_price', 'max_price', 'min_rating', 'on_sale', 'coming_soon', 'sort']),
             'genres' => Genre::all(['name'])->pluck('name')->toArray(),
             'platforms' => Platform::all(['name', 'slug'])
                 ->map(fn ($p) => ['value' => $p->slug, 'label' => $p->name])

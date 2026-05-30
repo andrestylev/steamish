@@ -5,10 +5,10 @@ import GameCarousel from '@/Components/GameCarousel';
 
 export default function Home({ featuredGames, newReleases, topRated, comingSoon, onSale }) {
     const sections = [
-        { title: 'On Sale', games: onSale, id: 'on-sale' },
-        { title: 'Top Rated', games: topRated, id: 'top-rated' },
-        { title: 'Coming Soon', games: comingSoon, id: 'coming-soon' },
-        { title: 'New Releases', games: newReleases, id: 'new-releases' },
+        { title: 'On Sale', games: onSale, id: 'on-sale', params: { on_sale: 1 } },
+        { title: 'Top Rated', games: topRated, id: 'top-rated', params: { min_rating: 4 } },
+        { title: 'Coming Soon', games: comingSoon, id: 'coming-soon', params: { coming_soon: 1 } },
+        { title: 'New Releases', games: newReleases, id: 'new-releases', params: { sort: 'newest' } },
     ];
 
     return (
@@ -24,7 +24,10 @@ export default function Home({ featuredGames, newReleases, topRated, comingSoon,
                     <section key={section.id} className="mb-5">
                         <div className="d-flex align-items-center justify-content-between mb-3">
                             <h2 className="h4 fw-bold mb-0">{section.title}</h2>
-                            <Link href={route('catalog')} className="text-accent text-decoration-none small">
+                            <Link
+                                href={route('catalog', section.params)}
+                                className="text-accent text-decoration-none small"
+                            >
                                 View All &rarr;
                             </Link>
                         </div>
