@@ -391,29 +391,6 @@ body {
         width: 200px;
     }
 
-    .game-carousel-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 5;
-        width: 32px;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: rgba(0, 0, 0, 0.5);
-        border: none;
-        color: #fff;
-        cursor: pointer;
-        opacity: 0;
-        transition: opacity 0.15s ease-in-out, background-color 0.15s ease-in-out;
-
-        &:hover {
-            background-color: rgba(0, 0, 0, 0.75);
-            opacity: 1 !important;
-        }
-    }
-
     &:hover .game-carousel-arrow {
         opacity: 0.8;
     }
@@ -427,6 +404,40 @@ body {
         right: -16px;
         border-radius: 4px 0 0 4px;
     }
+}
+
+// Arrow base styles — global so any carousel can reuse them
+.game-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out, background-color 0.15s ease-in-out;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.75);
+        opacity: 1 !important;
+    }
+}
+
+.game-carousel-arrow-left {
+    left: -16px;
+    border-radius: 0 4px 4px 0;
+}
+
+.game-carousel-arrow-right {
+    right: -16px;
+    border-radius: 4px 0 0 4px;
 }
 
 // =============================================================================
@@ -471,43 +482,6 @@ body {
         }
     }
 
-    .genre-carousel-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 5;
-        width: 32px;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: rgba(0, 0, 0, 0.5);
-        border: none;
-        color: #fff;
-        cursor: pointer;
-        opacity: 0;
-        transition: opacity 0.15s ease-in-out, background-color 0.15s ease-in-out;
-
-        &:hover {
-            background-color: rgba(0, 0, 0, 0.75);
-            opacity: 1 !important;
-        }
-    }
-
-    &:hover .genre-carousel-arrow {
-        opacity: 0.8;
-    }
-
-    .genre-carousel-arrow-left {
-        left: -16px;
-        border-radius: 0 4px 4px 0;
-    }
-
-    .genre-carousel-arrow-right {
-        right: -16px;
-        border-radius: 4px 0 0 4px;
-    }
-
     .genre-card-label {
         color: #fff;
         font-size: 1rem;
@@ -516,14 +490,8 @@ body {
         text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
         word-break: break-word;
     }
-}
 
-// Reuse game-carousel arrows — centered on container height, show on hover
-.genre-carousel {
-    .game-carousel-arrow {
-        top: 50%;
-    }
-
+    // Show arrows on hover — base styles come from global .game-carousel-arrow
     &:hover .game-carousel-arrow {
         opacity: 0.8;
     }
