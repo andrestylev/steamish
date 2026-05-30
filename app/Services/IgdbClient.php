@@ -74,6 +74,40 @@ class IgdbClient
     }
 
     /**
+     * Fetch covers from IGDB for the given game IGDB IDs.
+     *
+     * @param  int[]  $gameIds
+     * @return array<int, array{id: int, image_id: string, game: int}>
+     */
+    public function covers(array $gameIds): array
+    {
+        if (empty($gameIds)) {
+            return [];
+        }
+
+        $ids = implode(',', $gameIds);
+
+        return $this->get('covers', "fields image_id,game; where game = ({$ids}); limit 500;");
+    }
+
+    /**
+     * Fetch screenshots from IGDB for the given game IGDB IDs.
+     *
+     * @param  int[]  $gameIds
+     * @return array<int, array{id: int, image_id: string, game: int}>
+     */
+    public function screenshots(array $gameIds): array
+    {
+        if (empty($gameIds)) {
+            return [];
+        }
+
+        $ids = implode(',', $gameIds);
+
+        return $this->get('screenshots', "fields image_id,game; where game = ({$ids}); limit 500;");
+    }
+
+    /**
      * Send a POST request to the IGDB API with rate limiting, retry, and token refresh.
      *
      * @return array<int, array<string, mixed>>

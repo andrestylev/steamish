@@ -317,6 +317,89 @@ class IgdbClientTest extends TestCase
         $client->genres();
     }
 
+    public function test_covers_endpoint_returns_correct_data(): void
+    {
+        $this->fakeToken();
+
+        Http::fake([
+            'https://id.twitch.tv/oauth2/token' => Http::response([
+                'access_token' => 'test-access-token',
+                'expires_in' => 5184000,
+                'token_type' => 'bearer',
+            ]),
+            'https://api.igdb.com/v4/covers' => Http::response([
+                ['id' => 1, 'image_id' => 'co123', 'game' => 1],
+                ['id' => 2, 'image_id' => 'co456', 'game' => 2],
+            ], 200),
+        ]);
+
+        $covers = (new IgdbClient())->covers([1, 2]);
+
+        $this->assertCount(2, $covers);
+        $this->assertEquals('co123', $covers[0]['image_id']);
+        $this->assertEquals(2, $covers[1]['game']);
+    }
+
+    public function test_covers_returns_empty_array_when_no_ids(): void
+    {
+        $this->assertSame([], (new IgdbClient())->covers([]));
+    }
+
+    public function test_screenshots_endpoint_returns_correct_data(): void
+    {
+        $this->fakeToken();
+
+        Http::fake([
+            'https://id.twitch.tv/oauth2/token' => Http::response([
+                'access_token' => 'test-access-token',
+                'expires_in' => 5184000,
+                'token_type' => 'bearer',
+            ]),
+            'https://api.igdb.com/v4/screenshots' => Http::response([
+                ['id' => 1, 'image_id' => 'sc123', 'game' => 1],
+            ], 200),
+        ]);
+
+        $screenshots = (new IgdbClient())->screenshots([1]);
+
+        $this->assertCount(1, $screenshots);
+        $this->assertEquals('sc123', $screenshots[0]['image_id']);
+    }
+
+    public function test_screenshots_returns_empty_array_when_no_ids(): void
+    {
+        $this->assertSame([], (new IgdbClient())->screenshots([]));
+    }
+
+    public function test_429_triggers_retry_after_second_wait_and_succeeds(): void
+    {
+        $attempts = 0;
+
+        Http::fake([
+            'https://id.twitch.tv/oauth2/token' => Http::response([
+                'access_token' => 'test-access-token',
+                'expires_in' => 5184000,
+                'token_type' => 'bearer',
+            ]),
+            'https://api.igdb.com/v4/genres' => function () use (&$attempts) {
+                $attempts++;
+                if ($attempts === 1) {
+                    return Http::response([], 429, ['Retry-After' => '1']);
+                }
+
+                return Http::response([
+                    ['id' => 1, 'name' => 'Action', 'slug' => 'action'],
+                ], 200);
+            },
+        ]);
+
+        $genres = (new IgdbClient())->genres();
+
+        $this->assertCount(1, $genres);
+        $this->assertEquals('Action', $genres[0]['name']);
+        $this->assertEquals(2, $attempts);
+    }
+
     public function test_games_passes_limit_and_offset_in_body(): void
     {
         Http::fake([

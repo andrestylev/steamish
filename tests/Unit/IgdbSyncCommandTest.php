@@ -132,6 +132,8 @@ class IgdbSyncCommandTest extends TestCase
                     'status' => 'released',
                 ],
             ], 200),
+            'https://api.igdb.com/v4/covers' => Http::response([], 200),
+            'https://api.igdb.com/v4/screenshots' => Http::response([], 200),
         ]);
 
         $this->artisan('igdb:sync')
@@ -215,8 +217,67 @@ class IgdbSyncCommandTest extends TestCase
         $this->assertEquals('Fresh Genre', Genre::first()->name);
     }
 
+    public function test_syncs_covers_and_updates_game_cover(): void
+    {
+        $game = Game::factory()->create(['igdb_id' => 1]);
+
+        Http::fake([
+            'https://id.twitch.tv/oauth2/token' => Http::response([
+                'access_token' => 'test-token',
+                'expires_in' => 5184000,
+                'token_type' => 'bearer',
+            ]),
+            'https://api.igdb.com/v4/covers' => Http::response([
+                ['id' => 10, 'image_id' => 'co1234', 'game' => 1],
+            ], 200),
+            'https://api.igdb.com/v4/*' => Http::response([], 200),
+        ]);
+
+        $this->artisan('igdb:sync')
+            ->expectsOutputToContain('covers')
+            ->assertExitCode(0);
+
+        $this->assertDatabaseHas('game_images', [
+            'game_id' => $game->id,
+            'type' => 'cover',
+            'url' => 'https://images.igdb.com/igdb/image/upload/t_cover_big/co1234.jpg',
+        ]);
+
+        $game->refresh();
+        $this->assertStringContainsString('co1234', $game->cover);
+    }
+
+    public function test_syncs_screenshots(): void
+    {
+        $game = Game::factory()->create(['igdb_id' => 1]);
+
+        Http::fake([
+            'https://id.twitch.tv/oauth2/token' => Http::response([
+                'access_token' => 'test-token',
+                'expires_in' => 5184000,
+                'token_type' => 'bearer',
+            ]),
+            'https://api.igdb.com/v4/screenshots' => Http::response([
+                ['id' => 20, 'image_id' => 'sc5678', 'game' => 1],
+            ], 200),
+            'https://api.igdb.com/v4/*' => Http::response([], 200),
+        ]);
+
+        $this->artisan('igdb:sync')
+            ->expectsOutputToContain('screenshots')
+            ->assertExitCode(0);
+
+        $this->assertDatabaseHas('game_images', [
+            'game_id' => $game->id,
+            'type' => 'screenshot',
+            'url' => 'https://images.igdb.com/igdb/image/upload/t_screenshot_huge/sc5678.jpg',
+        ]);
+    }
+
     public function test_shows_progress_output(): void
     {
+        Game::factory()->create(['igdb_id' => 1]);
+
         Http::fake([
             'https://id.twitch.tv/oauth2/token' => Http::response([
                 'access_token' => 'test-token',
@@ -227,6 +288,8 @@ class IgdbSyncCommandTest extends TestCase
             'https://api.igdb.com/v4/platforms' => Http::response([], 200),
             'https://api.igdb.com/v4/companies' => Http::response([], 200),
             'https://api.igdb.com/v4/games' => Http::response([], 200),
+            'https://api.igdb.com/v4/covers' => Http::response([], 200),
+            'https://api.igdb.com/v4/screenshots' => Http::response([], 200),
         ]);
 
         $this->artisan('igdb:sync')
@@ -234,6 +297,8 @@ class IgdbSyncCommandTest extends TestCase
             ->expectsOutputToContain('platforms')
             ->expectsOutputToContain('companies')
             ->expectsOutputToContain('games')
+            ->expectsOutputToContain('covers')
+            ->expectsOutputToContain('screenshots')
             ->assertExitCode(0);
     }
 }

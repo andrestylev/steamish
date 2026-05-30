@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Company;
 use App\Models\Game;
+use App\Models\GameImage;
 use App\Models\Genre;
 use App\Models\Platform;
 use App\Services\IgdbClient;
@@ -37,6 +38,8 @@ class IgdbSyncCommand extends Command
             $this->syncPlatforms($client);
             $this->syncCompanies($client);
             $this->syncGames($client);
+            $this->syncCovers($client);
+            $this->syncScreenshots($client);
 
             $this->info('IGDB sync completed successfully.');
 
@@ -50,6 +53,7 @@ class IgdbSyncCommand extends Command
 
     private function truncateData(): void
     {
+        GameImage::query()->delete();
         Game::query()->delete();
         Company::query()->delete();
         Platform::query()->delete();
@@ -164,5 +168,89 @@ class IgdbSyncCommand extends Command
         } while ($count === $limit);
 
         $this->info("Synced {$total} games.");
+    }
+
+    private function syncCovers(IgdbClient $client): void
+    {
+        $gameIds = Game::whereNotNull('igdb_id')->pluck('igdb_id')->toArray();
+
+        if (empty($gameIds)) {
+            return;
+        }
+
+        $imageId = GameImage::where('type', 'cover')->pluck('game_id')->toArray();
+        $existingGames = Game::whereIn('id', $imageId)->pluck('igdb_id')->toArray();
+        $gameIds = array_values(array_diff($gameIds, $existingGames));
+
+        if (empty($gameIds)) {
+            $this->info('All covers already synced.');
+
+            return;
+        }
+
+        $chunks = array_chunk($gameIds, 100);
+        $total = 0;
+
+        foreach ($chunks as $chunk) {
+            $covers = $client->covers($chunk);
+
+            foreach ($covers as $cover) {
+                $game = Game::where('igdb_id', $cover['game'])->first();
+                if (! $game) {
+                    continue;
+                }
+
+                $url = 'https://images.igdb.com/igdb/image/upload/t_cover_big/' . $cover['image_id'] . '.jpg';
+
+                GameImage::create([
+                    'game_id' => $game->id,
+                    'url' => $url,
+                    'type' => 'cover',
+                    'sort_order' => 0,
+                ]);
+
+                $game->update(['cover' => $url]);
+
+                $total++;
+            }
+        }
+
+        $this->info("Synced {$total} covers.");
+    }
+
+    private function syncScreenshots(IgdbClient $client): void
+    {
+        $gameIds = Game::whereNotNull('igdb_id')->pluck('igdb_id')->toArray();
+
+        if (empty($gameIds)) {
+            return;
+        }
+
+        $chunks = array_chunk($gameIds, 100);
+        $total = 0;
+
+        foreach ($chunks as $chunk) {
+            $screenshots = $client->screenshots($chunk);
+
+            foreach ($screenshots as $screenshot) {
+                $game = Game::where('igdb_id', $screenshot['game'])->first();
+                if (! $game) {
+                    continue;
+                }
+
+                $url = 'https://images.igdb.com/igdb/image/upload/t_screenshot_huge/' . $screenshot['image_id'] . '.jpg';
+
+                GameImage::create([
+                    'game_id' => $game->id,
+                    'url' => $url,
+                    'type' => 'screenshot',
+                    'sort_order' => 0,
+                ]);
+
+                $total++;
+            }
+        }
+
+        $this->info("Synced {$total} screenshots.");
     }
 }
