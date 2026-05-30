@@ -8,16 +8,7 @@ export default function Header() {
         const form = new FormData(e.target);
         const q = form.get('q')?.trim();
         if (q) {
-            router.visit(route('catalog', { q }));
-        }
-    }
-
-    function handleSubnavSearch(e) {
-        e.preventDefault();
-        const form = new FormData(e.target);
-        const q = form.get('q')?.trim();
-        if (q) {
-            router.visit(route('catalog', { q }));
+            router.visit(route('catalog', { search: q }));
         }
     }
 
@@ -55,16 +46,6 @@ export default function Header() {
                                 </Link>
                             </li>
                         </ul>
-
-                        <form className="d-flex me-3" role="search" onSubmit={handleSearch}>
-                            <input
-                                className="form-control form-control-sm search-input"
-                                type="search"
-                                name="q"
-                                placeholder="Search games..."
-                                aria-label="Search"
-                            />
-                        </form>
 
                         <ul className="navbar-nav">
                             {auth.user ? (
@@ -127,7 +108,7 @@ export default function Header() {
                         Wishlist
                     </Link>
 
-                    <form className="d-flex flex-grow-1" role="search" onSubmit={handleSubnavSearch}>
+                    <form className="d-flex flex-grow-1" role="search" onSubmit={handleSearch}>
                         <div className="input-group input-group-sm">
                             <input
                                 className="form-control subnav-search"

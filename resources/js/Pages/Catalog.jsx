@@ -12,8 +12,8 @@ const DEFAULT_FILTERS = {
     minRating: 0,
 };
 
-export default function Catalog({ games, genres, platforms, priceRanges, ratings }) {
-    const [search, setSearch] = useState('');
+export default function Catalog({ games, genres, platforms, priceRanges, ratings, filters: serverFilters }) {
+    const [search, setSearch] = useState(serverFilters?.search || '');
     const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
     const hasActiveFilters =
