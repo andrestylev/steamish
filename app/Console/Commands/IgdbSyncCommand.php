@@ -117,12 +117,15 @@ class IgdbSyncCommand extends Command
 
     private function syncGames(IgdbClient $client): void
     {
-        $gameLimit = $this->option('game-limit');
-        $limit = $gameLimit ? (int) $gameLimit : 500;
+        $rawGameLimit = $this->option('game-limit');
+        $batchSize = $rawGameLimit ? min((int) $rawGameLimit, 500) : 500;
+        $totalLimit = $rawGameLimit ? (int) $rawGameLimit : 0;
         $offset = 0;
         $total = 0;
 
         do {
+            $remaining = $totalLimit > 0 ? $totalLimit - $total : 0;
+            $limit = $remaining > 0 && $remaining < $batchSize ? $remaining : $batchSize;
             $games = $client->games($limit, $offset);
             $count = count($games);
 
@@ -165,7 +168,7 @@ class IgdbSyncCommand extends Command
             }
 
             $offset += $count;
-        } while ($count === $limit);
+        } while ($count === $batchSize && ($totalLimit === 0 || $total < $totalLimit));
 
         $this->info("Synced {$total} games.");
     }
