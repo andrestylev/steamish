@@ -35,9 +35,10 @@ export default function Header() {
     );
 
     return (
-        <header className="header">
-            {/* Main Navbar */}
-            <nav className="navbar navbar-expand-lg">
+        <>
+            <header className="header">
+                {/* Main Navbar */}
+                <nav className="navbar navbar-expand-lg">
                 <div className="container">
                     <Link href={route('home')} className="navbar-brand fw-bold text-accent">
                         Steamish
@@ -166,13 +167,13 @@ export default function Header() {
                             ) : (
                                 <>
                                     <li className="nav-item">
-                                        <Link href={route('register')} className="nav-link nav-register">
-                                            Register
+                                        <Link href={route('login')} className="nav-link">
+                                            Sign In
                                         </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link href={route('login')} className="nav-link">
-                                            Sign In
+                                        <Link href={route('register')} className="nav-link nav-register">
+                                            Register
                                         </Link>
                                     </li>
                                 </>
@@ -181,6 +182,7 @@ export default function Header() {
                     </div>
                 </div>
             </nav>
+            </header>
 
             {/* ── Sub Navbar: Search + Wishlist ── */}
             <div className={`subnav py-1${scrolled ? ' subnav-scrolled' : ''}`}>
@@ -213,6 +215,6 @@ export default function Header() {
                     </Link>
                 </div>
             </div>
-        </header>
+        </>
     );
 }
