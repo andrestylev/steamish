@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\Genre;
+use App\Models\Platform;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
@@ -33,10 +35,10 @@ class CatalogController extends Controller
                 $games->where('title', 'like', "%{$search}%");
             }
             if ($genre) {
-                $games->where('genre', $genre);
+                $games->whereHas('genres', fn ($q) => $q->where('name', $genre));
             }
             if ($platform) {
-                $games->whereJsonContains('platforms', $platform);
+                $games->whereHas('platforms', fn ($q) => $q->where('slug', $platform));
             }
             if ($minPrice !== null) {
                 $games->where('price', '>=', (float) $minPrice);
@@ -73,26 +75,11 @@ class CatalogController extends Controller
         return Inertia::render('Catalog', [
             'games' => $games->values()->toArray(),
             'filters' => $request->only(['search', 'genre', 'platform', 'min_price', 'max_price', 'min_rating']),
-            'genres' => [
-                'Action',
-                'RPG',
-                'FPS',
-                'Simulation',
-                'Strategy',
-                'Sports',
-                'Horror',
-                'Adventure',
-                'Sandbox',
-                'Battle Royale',
-            ],
-            'platforms' => [
-                ['value' => 'windows', 'label' => 'Windows'],
-                ['value' => 'mac', 'label' => 'Mac'],
-                ['value' => 'linux', 'label' => 'Linux'],
-                ['value' => 'playstation', 'label' => 'PlayStation'],
-                ['value' => 'xbox', 'label' => 'Xbox'],
-                ['value' => 'nintendo', 'label' => 'Nintendo'],
-            ],
+            'genres' => Genre::all(['name'])->pluck('name')->toArray(),
+            'platforms' => Platform::all(['name', 'slug'])
+                ->map(fn ($p) => ['value' => $p->slug, 'label' => $p->name])
+                ->values()
+                ->toArray(),
             'priceRanges' => [
                 ['label' => 'Under $10', 'min' => 0, 'max' => 10],
                 ['label' => '$10 - $30', 'min' => 10, 'max' => 30],
