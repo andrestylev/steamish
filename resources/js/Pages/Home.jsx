@@ -1,14 +1,16 @@
+import { Fragment } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import HeroCarousel from '@/Components/HeroCarousel';
-import GameCard from '@/Components/GameCard';
+import GameCarousel from '@/Components/GameCarousel';
+import GenreCarousel from '@/Components/GenreCarousel';
 
-export default function Home({ featuredGames, newReleases, topRated, comingSoon, onSale }) {
+export default function Home({ featuredGames, newReleases, topRated, comingSoon, onSale, genres }) {
     const sections = [
-        { title: 'New Releases', games: newReleases, id: 'new-releases' },
-        { title: 'Top Rated', games: topRated, id: 'top-rated' },
-        { title: 'Coming Soon', games: comingSoon, id: 'coming-soon' },
-        { title: 'On Sale', games: onSale, id: 'on-sale' },
+        { title: 'On Sale', games: onSale, id: 'on-sale', params: { on_sale: 1 } },
+        { title: 'Top Rated', games: topRated, id: 'top-rated', params: { min_rating: 4 } },
+        { title: 'Coming Soon', games: comingSoon, id: 'coming-soon', params: { coming_soon: 1 } },
+        { title: 'New Releases', games: newReleases, id: 'new-releases', params: { sort: 'newest' } },
     ];
 
     return (
@@ -18,25 +20,44 @@ export default function Home({ featuredGames, newReleases, topRated, comingSoon,
             {/* Hero Carousel */}
             <HeroCarousel games={featuredGames} />
 
-            {/* Game Sections */}
+            {/* Game Sections — only show sections with games */}
             <div className="container py-4">
-                {sections.map((section) => (
-                    <section key={section.id} className="mb-5">
-                        <div className="d-flex align-items-center justify-content-between mb-3">
-                            <h2 className="h4 fw-bold mb-0">{section.title}</h2>
-                            <Link href={route('catalog')} className="text-accent text-decoration-none small">
-                                View All &rarr;
-                            </Link>
-                        </div>
-                        <div className="row g-3">
-                            {section.games.map((game) => (
-                                <div key={game.id} className="col-6 col-sm-4 col-lg-2">
-                                    <GameCard game={game} />
+                {sections.filter((s) => s.games.length > 0).map((section, idx) => (
+                    <Fragment key={section.id}>
+                        <section className="mb-5">
+                            <div className="d-flex align-items-center justify-content-between mb-3">
+                                <h2 className="h4 fw-bold mb-0">{section.title}</h2>
+                                <Link
+                                    href={route('catalog', section.params)}
+                                    className="text-accent text-decoration-none small"
+                                >
+                                    View All &rarr;
+                                </Link>
+                            </div>
+                            <GameCarousel games={section.games} />
+                        </section>
+
+                        {/* Genre carousel right below On Sale */}
+                        {idx === 0 && genres?.length > 0 && (
+                            <section className="mb-5">
+                                <div className="d-flex align-items-center justify-content-between mb-3">
+                                    <h2 className="h4 fw-bold mb-0">Browse by Genre</h2>
                                 </div>
-                            ))}
-                        </div>
-                    </section>
+                                <GenreCarousel genres={genres} />
+                            </section>
+                        )}
+                    </Fragment>
                 ))}
+
+                {/* Genre carousel also at the bottom if On Sale was empty/not shown */}
+                {sections.filter((s) => s.games.length > 0).length === 0 && genres?.length > 0 && (
+                    <section className="mb-5">
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                            <h2 className="h4 fw-bold mb-0">Browse by Genre</h2>
+                        </div>
+                        <GenreCarousel genres={genres} />
+                    </section>
+                )}
             </div>
         </GuestLayout>
     );

@@ -128,9 +128,15 @@ class IgdbSyncCommandTest extends TestCase
                     'platforms' => [1],
                     'involved_companies' => [1],
                     'aggregated_rating' => 85.0,
+                    'rating' => 90.0,
+                    'rating_count' => 5000,
                     'storyline' => 'An epic tale',
                     'status' => 'released',
+                    'first_release_date' => 1704067200,
                 ],
+            ], 200),
+            'https://api.igdb.com/v4/involved_companies' => Http::response([
+                ['id' => 1, 'company' => 1, 'developer' => true, 'publisher' => false, 'game' => 1],
             ], 200),
             'https://api.igdb.com/v4/covers' => Http::response([], 200),
             'https://api.igdb.com/v4/screenshots' => Http::response([], 200),
@@ -144,11 +150,15 @@ class IgdbSyncCommandTest extends TestCase
         $this->assertEquals('Test Game', $game->title);
         $this->assertEquals(85.0, (float) $game->aggregated_rating);
         $this->assertEquals('An epic tale', $game->storyline);
+        $this->assertEquals(4.5, (float) $game->rating_avg);
+        $this->assertEquals(5000, $game->rating_count);
+        $this->assertEquals('2024-01-01', $game->release_date->format('Y-m-d'));
 
         // Verify pivot entries exist
         $this->assertCount(1, $game->genres()->pluck('genre_id'));
         $this->assertCount(1, $game->platforms()->pluck('platform_id'));
         $this->assertCount(1, $game->companies()->pluck('company_id'));
+        $this->assertEquals('developer', $game->companies()->first()->pivot->role);
 
         // Verify the related models
         $this->assertEquals($genre->id, $game->genres()->first()->id);

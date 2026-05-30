@@ -15,6 +15,7 @@ class IgdbSyncCommand extends Command
 {
     protected $signature = 'igdb:sync
         {--game-limit= : Number of games to sync per batch}
+        {--top : Fetch top-rated games first (sorted by total_rating descending)}
         {--fresh : Truncate existing data before syncing}';
 
     protected $description = 'Sync IGDB data into the local database';
@@ -120,13 +121,15 @@ class IgdbSyncCommand extends Command
         $rawGameLimit = $this->option('game-limit');
         $batchSize = $rawGameLimit ? min((int) $rawGameLimit, 500) : 500;
         $totalLimit = $rawGameLimit ? (int) $rawGameLimit : 0;
+        $sort = $this->option('top') ? 'total_rating desc' : null;
         $offset = 0;
         $total = 0;
+        $syncedIgdbIds = [];
 
         do {
             $remaining = $totalLimit > 0 ? $totalLimit - $total : 0;
             $limit = $remaining > 0 && $remaining < $batchSize ? $remaining : $batchSize;
-            $games = $client->games($limit, $offset);
+            $games = $client->games($limit, $offset, $sort);
             $count = count($games);
 
             if ($count === 0) {
@@ -143,8 +146,15 @@ class IgdbSyncCommand extends Command
                         'aggregated_rating' => $game['aggregated_rating'] ?? null,
                         'storyline' => $game['storyline'] ?? null,
                         'status' => $game['status'] ?? null,
+                        'rating_avg' => isset($game['rating']) ? round($game['rating'] / 20, 2) : 0,
+                        'rating_count' => $game['rating_count'] ?? 0,
+                        'release_date' => isset($game['first_release_date'])
+                            ? date('Y-m-d', $game['first_release_date'])
+                            : null,
                     ]
                 );
+
+                $syncedIgdbIds[] = $game['id'];
 
                 // Attach genres via pivot
                 if (! empty($game['genres'])) {
@@ -158,19 +168,98 @@ class IgdbSyncCommand extends Command
                     $model->platforms()->syncWithoutDetaching($platformIds);
                 }
 
-                // Attach companies via pivot
-                if (! empty($game['involved_companies'])) {
-                    $companyIds = Company::whereIn('igdb_id', $game['involved_companies'])->pluck('id');
-                    $model->companies()->syncWithoutDetaching($companyIds);
-                }
-
                 $total++;
             }
 
             $offset += $count;
         } while ($count === $batchSize && ($totalLimit === 0 || $total < $totalLimit));
 
+        // Sync involved companies with roles for all games synced in this run
+        $this->syncInvolvedCompanies($client, $syncedIgdbIds);
+
         $this->info("Synced {$total} games.");
+    }
+
+    /**
+     * Sync involved companies with developer/publisher roles for the given game IGDB IDs.
+     */
+    private function syncInvolvedCompanies(IgdbClient $client, array $igdbIds): void
+    {
+        $chunks = array_chunk($igdbIds, 500);
+        $total = 0;
+        $missingCompanyIds = [];
+        $allInvolved = [];
+
+        foreach ($chunks as $chunk) {
+            $involved = $client->involvedCompanies($chunk);
+            $allInvolved = array_merge($allInvolved, $involved);
+
+            foreach ($involved as $entry) {
+                $game = Game::where('igdb_id', $entry['game'])->first();
+                if ($game && ! Company::where('igdb_id', $entry['company'])->exists()) {
+                    $missingCompanyIds[] = $entry['company'];
+                }
+            }
+        }
+
+        // Fetch and create missing companies in batch
+        if (! empty($missingCompanyIds)) {
+            $missingCompanyIds = array_unique($missingCompanyIds);
+            $companyChunks = array_chunk($missingCompanyIds, 500);
+
+            foreach ($companyChunks as $idChunk) {
+                $companies = $client->companiesByIds($idChunk);
+
+                foreach ($companies as $c) {
+                    Company::firstOrCreate(
+                        ['igdb_id' => $c['id']],
+                        [
+                            'name' => $c['name'],
+                            'slug' => $c['slug'],
+                            'country' => $c['country'] ?? null,
+                        ]
+                    );
+                }
+            }
+
+            $this->info("Synced " . count($missingCompanyIds) . " new companies.");
+        }
+
+        // Second pass: attach companies with roles
+        foreach ($allInvolved as $entry) {
+            $game = Game::where('igdb_id', $entry['game'])->first();
+            if (! $game) {
+                continue;
+            }
+
+            $company = Company::where('igdb_id', $entry['company'])->first();
+            if (! $company) {
+                continue;
+            }
+
+            $roles = [];
+            if (! empty($entry['developer'])) {
+                $roles[] = 'developer';
+            }
+            if (! empty($entry['publisher'])) {
+                $roles[] = 'publisher';
+            }
+            if (empty($roles)) {
+                $roles[] = 'developer';
+            }
+
+            foreach ($roles as $role) {
+                $game->companies()->syncWithoutDetaching([
+                    $company->id => ['role' => $role],
+                ]);
+            }
+
+            $total++;
+        }
+
+        if ($total > 0) {
+            $this->info("Synced {$total} involved companies.");
+        }
     }
 
     private function syncCovers(IgdbClient $client): void

@@ -62,15 +62,52 @@ class IgdbClient
     }
 
     /**
-     * Fetch games from IGDB with optional limit and offset.
+     * Fetch specific companies from IGDB by their IDs.
+     *
+     * @param  int[]  $ids
+     * @return array<int, array{id: int, name: string, slug: string, country: ?int}>
+     */
+    public function companiesByIds(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        $idList = implode(',', $ids);
+
+        return $this->get('companies', "fields name,slug,country; where id = ({$idList}); limit 500;");
+    }
+
+    /**
+     * Fetch games from IGDB with optional limit, offset, and sort.
      *
      * @param  int  $limit  Number of games to fetch (max 500)
      * @param  int  $offset  Offset for pagination
+     * @param  string|null  $sort  Sort clause (e.g. 'total_rating desc') or null for default order
      * @return array<int, array{id: int, name: string, slug: string}>
      */
-    public function games(int $limit = 500, int $offset = 0): array
+    public function games(int $limit = 500, int $offset = 0, ?string $sort = null): array
     {
-        return $this->get('games', "fields name,slug,summary,genres,platforms,involved_companies,cover,aggregated_rating,storyline,status; limit {$limit}; offset {$offset};");
+        $sortClause = $sort ? "sort {$sort};" : '';
+
+        return $this->get('games', "fields name,slug,summary,genres,platforms,involved_companies,cover,aggregated_rating,storyline,status,rating,rating_count,first_release_date; {$sortClause} limit {$limit}; offset {$offset};");
+    }
+
+    /**
+     * Fetch involved companies for the given game IGDB IDs.
+     *
+     * @param  int[]  $gameIds
+     * @return array<int, array{id: int, company: int, developer: bool, publisher: bool, game: int}>
+     */
+    public function involvedCompanies(array $gameIds): array
+    {
+        if (empty($gameIds)) {
+            return [];
+        }
+
+        $ids = implode(',', $gameIds);
+
+        return $this->get('involved_companies', "fields company,developer,publisher,game; where game = ({$ids}); limit 500;");
     }
 
     /**

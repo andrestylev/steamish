@@ -56,9 +56,7 @@ class CartController extends Controller
      */
     public function add(int $gameId): RedirectResponse
     {
-        // Validate that the game exists in our hardcoded data
-        $games = $this->allGames();
-        $game = collect($games)->firstWhere('id', $gameId);
+        $game = Game::find($gameId);
 
         if (! $game) {
             return redirect()->back()->with('error', __('Game not found.'));
@@ -74,6 +72,8 @@ class CartController extends Controller
                 'game_id' => $gameId,
             ]);
         }
+
+        session()->flash('added_to_cart', (int) $gameId);
 
         return redirect()->back()->with('success', __('Game added to cart.'));
     }

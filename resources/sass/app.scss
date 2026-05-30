@@ -63,6 +63,7 @@ $dropdown-link-hover-bg: rgba(0, 0, 0, 0.2);
     --steam-card-bg: #2a475e;
     --steam-header-bg: #171a21;
     --steam-footer-bg: #171a21;
+    --steam-subnav-bg: #1f3345;
 }
 
 // =============================================================================
@@ -117,14 +118,15 @@ body {
 
     .navbar-brand {
         font-weight: 700;
-        font-size: 1.25rem;
+        font-size: 1.6rem;
     }
 
     .nav-link {
         color: var(--steam-text);
-        font-weight: 500;
+        font-weight: 750;
         font-size: 0.9rem;
-        padding: 0.5rem 0.75rem;
+        padding: 2.1rem 0.75rem;
+        margin-right: 2rem;
         transition: color 0.15s ease-in-out;
 
         &:hover {
@@ -132,21 +134,33 @@ body {
         }
     }
 
-    .search-input {
-        background-color: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--steam-text);
-        font-size: 0.85rem;
+    .nav-register {
+        border: 1px solid var(--steam-text-muted);
+        border-radius: 2px;
+        padding: 0.3rem 0.75rem !important;
+        margin-top: 1.7rem;
+        margin-bottom: 1.7rem;
+        font-weight: 600;
 
-        &::placeholder {
-            color: var(--steam-text-muted);
-        }
-
-        &:focus {
-            background-color: rgba(0, 0, 0, 0.4);
+        &:hover {
             border-color: var(--steam-accent);
-            box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
         }
+    }
+
+    // Hover dropdowns: show menu on hover, keep link clickable
+    .dropdown:hover > .dropdown-menu {
+        display: block;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+        border-radius: 2px;
+        z-index: 1030;
+    }
+
+    .dropdown-arrow {
+        display: inline-block;
+        margin-left: 2px;
+        vertical-align: middle;
+        opacity: 0.6;
+
     }
 
     .navbar-toggler {
@@ -159,11 +173,116 @@ body {
 }
 
 // =============================================================================
-// 7. Footer
+// 7. Sub-navbar
+// =============================================================================
+.subnav {
+    background-color: var(--steam-subnav-bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    transition: background-color 0.2s ease, backdrop-filter 0.2s ease;
+
+    &.subnav-scrolled {
+        background-color: rgba(31, 51, 69, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    .subnav-link {
+        color: var(--steam-text);
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 0.5rem 0.75rem;
+        text-decoration: none;
+        transition: color 0.15s ease-in-out;
+
+        &:hover {
+            color: var(--steam-accent);
+        }
+    }
+
+    .subnav-search {
+        background-color: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--steam-text);
+        font-size: 0.85rem;
+
+        &::placeholder {
+            color: var(--steam-text-muted);
+        }
+
+        &:focus {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-color: var(--steam-accent);
+            box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
+        }
+    }
+
+    .subnav-search-form {
+        width: 33%;
+        min-width: 180px;
+    }
+}
+
+// =============================================================================
+// 8. Footer
 // =============================================================================
 .footer {
     background-color: var(--steam-footer-bg);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.85rem;
+
+    .footer-brand {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #8f98a0;
+        letter-spacing: -0.02em;
+        user-select: none;
+    }
+
+    .footer-copyright {
+        color: var(--steam-text-muted);
+        max-width: 380px;
+    }
+
+    .footer-heading {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--steam-text-muted);
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-link {
+        color: var(--steam-text-muted);
+        text-decoration: none;
+        font-size: 0.8rem;
+        transition: color 0.15s ease-in-out;
+        display: inline-block;
+        padding: 0.15rem 0;
+
+        &:hover {
+            color: var(--steam-accent);
+        }
+    }
+
+    .footer-social-link {
+        color: var(--steam-text-muted);
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.15s ease-in-out;
+
+        &:hover {
+            color: var(--steam-accent);
+        }
+    }
+
+    ul {
+        li {
+            line-height: 1.8;
+        }
+    }
 }
 
 // =============================================================================
@@ -176,7 +295,7 @@ body {
 }
 
 // =============================================================================
-// 9. Forms
+// 10. Forms
 // =============================================================================
 .form-control,
 .form-select {
@@ -235,6 +354,7 @@ body {
     border-radius: 4px;
     overflow: hidden;
     transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 
     &:hover {
@@ -250,22 +370,153 @@ body {
 }
 
 // =============================================================================
+// 11a. Game Carousel
+// =============================================================================
+.game-carousel {
+    .game-carousel-track {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;      /* Firefox */
+        -ms-overflow-style: none;  /* IE/Edge */
+        padding: 0.25rem 0;
+
+        &::-webkit-scrollbar {
+            display: none;          /* Chrome/Safari */
+        }
+    }
+
+    .game-carousel-card {
+        flex: 0 0 auto;
+        width: 200px;
+    }
+
+    &:hover .game-carousel-arrow {
+        opacity: 0.8;
+    }
+
+    .game-carousel-arrow-left {
+        left: -16px;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .game-carousel-arrow-right {
+        right: -16px;
+        border-radius: 4px 0 0 4px;
+    }
+}
+
+// Arrow base styles — global so any carousel can reuse them
+.game-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out, background-color 0.15s ease-in-out;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.75);
+        opacity: 1 !important;
+    }
+}
+
+.game-carousel-arrow-left {
+    left: -16px;
+    border-radius: 0 4px 4px 0;
+}
+
+.game-carousel-arrow-right {
+    right: -16px;
+    border-radius: 4px 0 0 4px;
+}
+
+// =============================================================================
+// 11b. Genre Carousel
+// =============================================================================
+.genre-carousel {
+    .genre-carousel-track {
+        display: flex;
+        gap: 0.75rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;      
+        -ms-overflow-style: none;
+        padding: 0.25rem 0;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .genre-card {
+        flex: 0 0 auto;
+        width: 150px;
+        height: 150px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0.5rem;
+        transition: transform 0.50s ease-in-out, box-shadow 0.25s ease-in-out;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+
+    .genre-card-label {
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.5;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+        word-break: break-word;
+    }
+
+    // Show arrows on hover — base styles come from global .game-carousel-arrow
+    &:hover .game-carousel-arrow {
+        opacity: 0.8;
+    }
+}
+
+// =============================================================================
 // 12. Catalog — Filter Sidebar
 // =============================================================================
 .filter-sidebar {
     background-color: var(--steam-card-bg);
     border-radius: 4px;
     padding: 1rem;
+    
 }
 
 .filter-checkbox {
     cursor: pointer;
     padding: 0.25rem 0.5rem;
-    border-radius: 3px;
+    border-radius: 1px;
     transition: background-color 0.1s ease-in-out;
+    
 
     &:hover {
-        background-color: rgba(255, 255, 255, 0.05);
+        background-color: rgba(0, 39, 99, 0.064);
     }
 
     .form-check-input {
@@ -280,7 +531,7 @@ body {
 
         &:focus {
             box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
-            border-color: var(--steam-accent);
+            border-color: var(--steam-accent);color: red;
         }
     }
 }
@@ -304,6 +555,74 @@ body {
 }
 
 // =============================================================================
+// 12a. Price Range Slider
+// =============================================================================
+.price-slider-container {
+    position: relative;
+    height: 36px;
+
+    .price-slider-track {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .price-slider-fill {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        background-color: var(--steam-accent);
+        border-radius: 2px;
+        pointer-events: none;
+    }
+
+    .price-slider {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 0;
+        transform: translateY(-50%);
+        pointer-events: none;
+        appearance: none;
+        -webkit-appearance: none;
+        background: transparent;
+        margin: 0;
+        z-index: 2;
+
+        &::-webkit-slider-thumb {
+            pointer-events: auto;
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--steam-accent);
+            border: 2px solid #fff;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        &::-moz-range-thumb {
+            pointer-events: auto;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--steam-accent);
+            border: 2px solid #fff;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+    }
+}
+
+// =============================================================================
 // 13. Search Bar
 // =============================================================================
 .search-bar {
@@ -318,52 +637,6 @@ body {
         &:focus {
             border-color: var(--steam-accent);
             box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
-        }
-    }
-}
-
-// =============================================================================
-// 14. Review Card
-// =============================================================================
-.review-card {
-    background-color: #1e3040;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: background-color 0.15s ease;
-
-    &:hover {
-        background-color: lighten(#1e3040, 2%);
-    }
-}
-
-.star-interactive {
-    &:hover {
-        color: #ffc107 !important;
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--steam-accent);
-        outline-offset: 2px;
-        border-radius: 2px;
-    }
-}
-
-// =============================================================================
-// 15. Responsive — minimum 320px viewport
-// =============================================================================
-@media (max-width: 576px) {
-    .container {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-    }
-
-    h1.display-4 {
-        font-size: 2rem;
-    }
-
-    .header {
-        .navbar-brand {
-            font-size: 1.1rem;
         }
     }
 }
@@ -396,4 +669,18 @@ body {
         display: inline-flex;
         align-items: center;
     }
+}
+
+// =============================================================================
+// 14. Animations
+// =============================================================================
+@keyframes badgeBounce {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.35); }
+    60%  { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+.badge-bounce {
+    animation: badgeBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }

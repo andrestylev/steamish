@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -16,15 +17,49 @@ class LibraryController extends Controller
      */
     public function index(): Response
     {
-        // Get purchased game IDs from the database
         $purchasedGameIds = Purchase::where('user_id', Auth::id())
             ->pluck('game_id')
             ->unique()
             ->toArray();
 
-        // Since we're using hardcoded data (no seeders yet), purchasedGameIds
-        // will be empty until purchases are made via Stripe webhook.
-        // For demo purposes, we filter the hardcoded games by purchased IDs.
+        if (empty($purchasedGameIds)) {
+            return Inertia::render('Library', [
+                'games' => [],
+                'totalGames' => 0,
+            ]);
+        }
+
+        // Try DB games first
+        $dbGames = Game::with('genres', 'platforms')->whereIn('id', $purchasedGameIds)->get();
+        if ($dbGames->isNotEmpty()) {
+            $games = $dbGames->map(function ($game) {
+                return [
+                    'id' => $game->id,
+                    'title' => $game->title,
+                    'slug' => $game->slug,
+                    'cover' => $game->cover,
+                    'header' => $game->header,
+                    'genre' => $game->genres?->first()?->name ?? $game->genre,
+                    'developer' => $game->developer,
+                    'price' => $game->price,
+                    'is_discounted' => $game->is_discounted,
+                    'discount_price' => $game->discount_price,
+                    'discount_pct' => $game->discount_pct,
+                    'rating_avg' => $game->rating_avg,
+                    'rating_count' => $game->rating_count,
+                    'platforms' => $game->platforms?->pluck('slug')->toArray() ?? [],
+                    'release_date' => $game->release_date,
+                    'about' => $game->about,
+                ];
+            })->values()->toArray();
+
+            return Inertia::render('Library', [
+                'games' => $games,
+                'totalGames' => count($games),
+            ]);
+        }
+
+        // Fallback to hardcoded data
         $allGames = $this->allGames();
         $games = collect($allGames)->filter(function ($game) use ($purchasedGameIds) {
             return in_array($game['id'], $purchasedGameIds);
