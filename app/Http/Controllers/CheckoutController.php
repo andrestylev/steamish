@@ -24,6 +24,22 @@ class CheckoutController extends Controller
             ->with('game')
             ->get();
 
+        // If order was just created, show success with purchased games
+        if (session('order_created')) {
+            $purchasedGames = session('purchased_games', []);
+
+            return Inertia::render('Checkout', [
+                'items' => [],
+                'user' => [
+                    'name' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                ],
+                'orderCreated' => true,
+                'orderNumber' => session('order_number'),
+                'purchasedGames' => $purchasedGames,
+            ]);
+        }
+
         if ($cartItems->isEmpty()) {
             return redirect()->route('cart.index')->with('error', __('Your cart is empty.'));
         }
@@ -96,11 +112,22 @@ class CheckoutController extends Controller
                 ->delete();
         });
 
+        // Collect purchased game data for success screen
+        $purchasedGames = Game::whereIn('id', $gameIds)->get()->map(function ($game) {
+            return [
+                'id' => $game->id,
+                'title' => $game->title,
+                'cover' => $game->cover,
+                'slug' => $game->slug,
+            ];
+        })->values()->toArray();
+
         // Generate a readable order number
         $orderNumber = 'ST-' . now()->format('Ymd') . '-' . Str::random(6);
 
         return redirect()->route('checkout.index')
             ->with('order_created', true)
-            ->with('order_number', $orderNumber);
+            ->with('order_number', $orderNumber)
+            ->with('purchased_games', $purchasedGames);
     }
 }

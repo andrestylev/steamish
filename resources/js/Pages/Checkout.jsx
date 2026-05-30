@@ -4,15 +4,18 @@ import GuestLayout from '@/Layouts/GuestLayout';
 
 const STEPS = ['Payment', 'Details', 'Confirm', 'Done'];
 
-export default function Checkout({ items, user: userData }) {
+export default function Checkout({ items, user: userData, orderCreated, orderNumber, purchasedGames }) {
     const { flash } = usePage().props;
     const [step, setStep] = useState(0);
     const [selectedIds, setSelectedIds] = useState(items.map((i) => i.game_id));
     const [paymentMethod, setPaymentMethod] = useState('');
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(false);
-    const [orderNumber, setOrderNumber] = useState(flash?.order_number || '');
-    const [orderCreated, setOrderCreated] = useState(flash?.order_created || false);
+
+    // Support both direct prop and flash-based data
+    const orderNum = orderNumber || flash?.order_number || '';
+    const games = purchasedGames || flash?.purchased_games || [];
+    const orderOk = orderCreated || flash?.order_created || false;
 
     // Card form
     const [card, setCard] = useState({
@@ -31,11 +34,10 @@ export default function Checkout({ items, user: userData }) {
 
     // If order was just created, jump to step 4
     useEffect(() => {
-        if (orderCreated) {
+        if (orderOk) {
             setStep(3);
-            setOrderNumber(flash.order_number);
         }
-    }, [orderCreated]);
+    }, [orderOk]);
 
     // ── Computed values ──
     const selectedItems = items.filter((i) => selectedIds.includes(i.game_id));
@@ -368,24 +370,67 @@ export default function Checkout({ items, user: userData }) {
     };
 
     const renderStep4 = () => (
-        <div className="text-center py-4">
-            <div
-                className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
-                style={{ width: 64, height: 64, backgroundColor: '#1a9fff22' }}
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#1a9fff" viewBox="0 0 16 16">
-                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                </svg>
+        <div className="py-3">
+            <div className="text-center mb-4">
+                <div
+                    className="d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3"
+                    style={{ width: 64, height: 64, backgroundColor: '#1a9fff22' }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#1a9fff" viewBox="0 0 16 16">
+                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                </div>
+                <h4 className="fw-bold text-white mb-2">Purchase Successful!</h4>
+                <p className="text-secondary small mb-1">Thank you for your purchase.</p>
+                <p className="small mb-3">
+                    <span className="text-secondary">Order number: </span>
+                    <span className="text-accent fw-bold">{orderNum}</span>
+                </p>
             </div>
-            <h4 className="fw-bold text-white mb-2">Payment Successful!</h4>
-            <p className="text-secondary small mb-1">Thank you for your purchase.</p>
-            <p className="small mb-4">
-                <span className="text-secondary">Order number: </span>
-                <span className="text-accent fw-bold">{orderNumber}</span>
-            </p>
-            <Link href={route('library.index')} className="btn btn-accent">
-                View My Library
-            </Link>
+
+            {/* Purchased games */}
+            <div className="d-flex flex-column gap-2 mb-4">
+                {games.map((game) => (
+                    <div
+                        key={game.id}
+                        className="d-flex align-items-center gap-3 p-3"
+                        style={{ backgroundColor: '#1b2838', borderRadius: 4 }}
+                    >
+                        <div
+                            style={{
+                                width: 80,
+                                height: 45,
+                                borderRadius: 3,
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                                backgroundColor: '#2a475e',
+                            }}
+                        >
+                            <img src={game.cover} alt={game.title} className="w-100 h-100" style={{ objectFit: 'cover' }} />
+                        </div>
+                        <div className="flex-grow-1" style={{ minWidth: 0 }}>
+                            <div className="fw-bold text-white small text-truncate">{game.title}</div>
+                            <div className="text-secondary" style={{ fontSize: 11 }}>In your library</div>
+                        </div>
+                        <Link
+                            href={route('library.index')}
+                            className="btn btn-accent btn-sm text-nowrap"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" className="me-1" style={{ verticalAlign: '-2px' }}>
+                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                            </svg>
+                            Download Now
+                        </Link>
+                    </div>
+                ))}
+            </div>
+
+            <div className="text-center">
+                <Link href={route('library.index')} className="btn btn-accent px-4">
+                    View My Library
+                </Link>
+            </div>
         </div>
     );
 
@@ -419,7 +464,7 @@ export default function Checkout({ items, user: userData }) {
             <Head title="Checkout" />
 
             <div className="container py-4">
-                {orderCreated ? (
+                {orderOk ? (
                     /* ── Success full-width ── */
                     <div className="row justify-content-center">
                         <div className="col-lg-6">{renderStep4()}</div>
