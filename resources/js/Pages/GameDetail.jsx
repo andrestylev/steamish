@@ -1,13 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import StarRating from '@/Components/StarRating';
 import ReviewCard from '@/Components/ReviewCard';
+import AddToCartModal from '@/Components/AddToCartModal';
 
 export default function GameDetail({ game, reviews }) {
-    const { auth } = usePage().props;
+    const { auth, addedToCart } = usePage().props;
     const [activeScreenshot, setActiveScreenshot] = useState(0);
     const [showReviewForm, setShowReviewForm] = useState(false);
+    const [showCartModal, setShowCartModal] = useState(false);
+
+    // Show modal when a game was just added to cart (flash data)
+    useEffect(() => {
+        if (addedToCart && parseInt(addedToCart) === game.id) {
+            setShowCartModal(true);
+        }
+    }, [addedToCart, game.id]);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         rating: 5,
@@ -65,6 +74,7 @@ export default function GameDetail({ game, reviews }) {
     };
 
     return (
+        <>
         <GuestLayout>
             <Head title={game.title} />
 
@@ -278,5 +288,10 @@ export default function GameDetail({ game, reviews }) {
                 </div>
             </div>
         </GuestLayout>
+
+        {showCartModal && (
+            <AddToCartModal game={game} onClose={() => setShowCartModal(false)} />
+        )}
+        </>
     );
 }

@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 
 export default function Header() {
     const { auth, cartCount, wishlistCount } = usePage().props;
     const [scrolled, setScrolled] = useState(false);
+    const [badgeBounce, setBadgeBounce] = useState(false);
+    const prevCartCount = useRef(cartCount);
 
     useEffect(() => {
         function onScroll() {
@@ -12,6 +14,17 @@ export default function Header() {
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
+
+    // Animate cart badge when count increases
+    useEffect(() => {
+        if (cartCount > prevCartCount.current) {
+            setBadgeBounce(true);
+            const timer = setTimeout(() => setBadgeBounce(false), 500);
+            prevCartCount.current = cartCount;
+            return () => clearTimeout(timer);
+        }
+        prevCartCount.current = cartCount;
+    }, [cartCount]);
 
     function handleSearch(e) {
         e.preventDefault();
@@ -128,7 +141,7 @@ export default function Header() {
                             <li className="nav-item">
                                 <Link href={route('cart.index')} className="nav-link position-relative">
                                     Cart
-                                    <span className="badge bg-accent ms-1">{cartCount}</span>
+                                    <span className={`badge bg-accent ms-1${badgeBounce ? ' badge-bounce' : ''}`}>{cartCount}</span>
                                 </Link>
                             </li>
                         </ul>

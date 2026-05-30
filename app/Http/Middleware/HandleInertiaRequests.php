@@ -37,6 +37,7 @@ class HandleInertiaRequests extends Middleware
             'cartCount' => $request->user()
                 ? CartItem::where('user_id', $request->user()->id)->count()
                 : 0,
+            'addedToCart' => fn () => $request->session()->get('added_to_cart'),
             'wishlistCount' => $request->user()
                 ? WishlistItem::where('user_id', $request->user()->id)->count()
                 : 0,

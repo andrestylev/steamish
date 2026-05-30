@@ -73,6 +73,8 @@ class CartController extends Controller
             ]);
         }
 
+        session()->flash('added_to_cart', (int) $gameId);
+
         return redirect()->back()->with('success', __('Game added to cart.'));
     }
 
