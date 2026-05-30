@@ -63,6 +63,7 @@ $dropdown-link-hover-bg: rgba(0, 0, 0, 0.2);
     --steam-card-bg: #2a475e;
     --steam-header-bg: #171a21;
     --steam-footer-bg: #171a21;
+    --steam-subnav-bg: #1f3345;
 }
 
 // =============================================================================
@@ -159,11 +160,71 @@ body {
 }
 
 // =============================================================================
-// 7. Footer
+// 7. Sub-navbar
+// =============================================================================
+.subnav {
+    background-color: var(--steam-subnav-bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    .subnav-link {
+        color: var(--steam-text);
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 0.4rem 0.75rem;
+        text-decoration: none;
+        transition: color 0.15s ease-in-out;
+
+        &:hover {
+            color: var(--steam-accent);
+        }
+    }
+
+    .subnav-search {
+        background-color: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--steam-text);
+        font-size: 0.85rem;
+
+        &::placeholder {
+            color: var(--steam-text-muted);
+        }
+
+        &:focus {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-color: var(--steam-accent);
+            box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
+        }
+    }
+}
+
+// =============================================================================
+// 8. Footer
 // =============================================================================
 .footer {
     background-color: var(--steam-footer-bg);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+    a {
+        color: var(--steam-text-muted);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: color 0.15s ease-in-out;
+
+        &:hover {
+            color: var(--steam-accent);
+        }
+    }
+}
+
+.footer-link {
+    color: var(--steam-text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.15s ease-in-out;
+
+    &:hover {
+        color: var(--steam-accent);
+    }
 }
 
 // =============================================================================
@@ -176,7 +237,7 @@ body {
 }
 
 // =============================================================================
-// 9. Forms
+// 10. Forms
 // =============================================================================
 .form-control,
 .form-select {

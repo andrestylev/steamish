@@ -29,7 +29,7 @@ export default function HeroCarousel({ games }) {
                         <div
                             className="hero-slide d-flex align-items-center"
                             style={{
-                                backgroundImage: `linear-gradient(rgba(23, 26, 33, 0.3), rgba(23, 26, 33, 0.9)), url(${game.header})`,
+                                backgroundImage: `linear-gradient(rgba(23, 26, 33, 0.3), rgba(23, 26, 33, 0.9)), url(${game.header || game.cover})`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
                                 minHeight: '400px',

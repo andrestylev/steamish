@@ -89,7 +89,7 @@ class GameRelationsTest extends TestCase
     public function test_by_platform_scope_uses_pivot_when_populated(): void
     {
         // Create game first (no platforms exist yet — afterCreating attaches nothing)
-        $game = Game::factory()->create(['platforms' => ['windows']]);
+        $game = Game::factory()->create(['platforms' => '["windows"]']);
         $platform = Platform::factory()->create(['name' => 'Windows']);
         $game->platforms()->attach($platform);
 
@@ -100,8 +100,8 @@ class GameRelationsTest extends TestCase
 
     public function test_by_platform_scope_falls_back_to_legacy_column_when_pivot_empty(): void
     {
-        Game::factory()->create(['platforms' => ['windows'], 'title' => 'Win Game']);
-        Game::factory()->create(['platforms' => ['linux'], 'title' => 'Linux Game']);
+        Game::factory()->create(['platforms' => '["windows"]', 'title' => 'Win Game']);
+        Game::factory()->create(['platforms' => '["linux"]', 'title' => 'Linux Game']);
 
         $results = Game::byPlatform('windows')->get();
 

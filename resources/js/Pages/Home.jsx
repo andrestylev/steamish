@@ -18,9 +18,9 @@ export default function Home({ featuredGames, newReleases, topRated, comingSoon,
             {/* Hero Carousel */}
             <HeroCarousel games={featuredGames} />
 
-            {/* Game Sections */}
+            {/* Game Sections — only show sections with games */}
             <div className="container py-4">
-                {sections.map((section) => (
+                {sections.filter((s) => s.games.length > 0).map((section) => (
                     <section key={section.id} className="mb-5">
                         <div className="d-flex align-items-center justify-content-between mb-3">
                             <h2 className="h4 fw-bold mb-0">{section.title}</h2>

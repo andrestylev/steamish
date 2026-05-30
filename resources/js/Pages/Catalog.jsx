@@ -31,7 +31,7 @@ export default function Catalog({ games, genres, platforms, priceRanges, ratings
             }
 
             // Genre filter
-            if (filters.genres.length > 0 && !filters.genres.includes(game.genre)) {
+            if (filters.genres.length > 0 && (!game.genre || !filters.genres.includes(game.genre))) {
                 return false;
             }
 
@@ -47,7 +47,8 @@ export default function Catalog({ games, genres, platforms, priceRanges, ratings
 
             // Platform filter
             if (filters.platforms.length > 0) {
-                const hasPlatform = filters.platforms.some((p) => game.platforms.includes(p));
+                const gamePlatforms = game.platforms || [];
+                const hasPlatform = filters.platforms.some((p) => gamePlatforms.includes(p));
                 if (!hasPlatform) return false;
             }
 

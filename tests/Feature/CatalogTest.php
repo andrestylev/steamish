@@ -56,8 +56,8 @@ class CatalogTest extends TestCase
     public function test_platform_filter_works_via_pivot(): void
     {
         // Create games before platforms so afterCreating attaches nothing
-        $game1 = Game::factory()->create(['title' => 'Windows Game', 'platforms' => ['linux']]);
-        $game2 = Game::factory()->create(['title' => 'Linux Game', 'platforms' => ['linux']]);
+        $game1 = Game::factory()->create(['title' => 'Windows Game', 'platforms' => '["linux"]']);
+        $game2 = Game::factory()->create(['title' => 'Linux Game', 'platforms' => '["linux"]']);
 
         $platform = Platform::factory()->create(['name' => 'Windows', 'slug' => 'windows']);
         Platform::factory()->create(['name' => 'Linux', 'slug' => 'linux']);
@@ -104,7 +104,7 @@ class CatalogTest extends TestCase
             'title' => 'Matching Game',
             'genre' => 'Unrelated',
             'price' => 19.99,
-            'platforms' => ['linux'],
+            'platforms' => '["linux"]',
             'rating_avg' => 4.5,
         ]);
 
@@ -112,7 +112,7 @@ class CatalogTest extends TestCase
             'title' => 'Non Matching',
             'genre' => 'Unrelated',
             'price' => 59.99,
-            'platforms' => ['linux'],
+            'platforms' => '["linux"]',
             'rating_avg' => 3.0,
         ]);
 

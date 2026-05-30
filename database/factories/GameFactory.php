@@ -40,7 +40,7 @@ class GameFactory extends Factory
             'developer' => fake()->company(),
             'publisher' => fake()->company(),
             'genre' => fake()->randomElement(['Action', 'RPG', 'FPS', 'Strategy', 'Sports', 'Simulation', 'Adventure', 'Puzzle']),
-            'platforms' => fake()->randomElements(['windows', 'mac', 'linux', 'playstation', 'xbox', 'nintendo'], fake()->numberBetween(1, 3)),
+            'platforms' => json_encode(fake()->randomElements(['windows', 'mac', 'linux', 'playstation', 'xbox', 'nintendo'], fake()->numberBetween(1, 3))),
             'cover' => 'https://placehold.co/300x400/2a475e/1a9fff?text=' . urlencode($title),
             'header' => 'https://placehold.co/1200x400/2a475e/1a9fff?text=' . urlencode($title),
             'rating_avg' => fake()->randomFloat(2, 3.0, 5.0),

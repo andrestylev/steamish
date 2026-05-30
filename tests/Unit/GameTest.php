@@ -122,9 +122,9 @@ class GameTest extends TestCase
 
     public function test_by_platform_scope_uses_where_json_contains(): void
     {
-        Game::factory()->create(['platforms' => ['windows', 'mac']]);
-        Game::factory()->create(['platforms' => ['windows', 'linux']]);
-        Game::factory()->create(['platforms' => ['playstation', 'xbox']]);
+        Game::factory()->create(['platforms' => '["windows","mac"]']);
+        Game::factory()->create(['platforms' => '["windows","linux"]']);
+        Game::factory()->create(['platforms' => '["playstation","xbox"]']);
 
         $windowsGames = Game::byPlatform('windows')->get();
 

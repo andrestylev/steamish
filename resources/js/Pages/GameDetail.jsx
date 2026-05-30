@@ -150,7 +150,7 @@ export default function GameDetail({ game, reviews }) {
                                     <div className="p-3" style={{ backgroundColor: '#1e3040', borderRadius: 4 }}>
                                         <h6 className="text-accent fw-bold mb-2" style={{ fontSize: '0.85rem' }}>Minimum</h6>
                                         <ul className="list-unstyled mb-0" style={{ fontSize: '0.8rem', color: '#acb8c4', lineHeight: 1.8 }}>
-                                            {game.min_req.split('|').map((req, idx) => (
+                                            {(game.min_req || '').split('|').map((req, idx) => (
                                                 <li key={idx}>{req.trim()}</li>
                                             ))}
                                         </ul>
@@ -160,7 +160,7 @@ export default function GameDetail({ game, reviews }) {
                                     <div className="p-3" style={{ backgroundColor: '#1e3040', borderRadius: 4 }}>
                                         <h6 className="text-accent fw-bold mb-2" style={{ fontSize: '0.85rem' }}>Recommended</h6>
                                         <ul className="list-unstyled mb-0" style={{ fontSize: '0.8rem', color: '#acb8c4', lineHeight: 1.8 }}>
-                                            {game.rec_req.split('|').map((req, idx) => (
+                                            {(game.rec_req || '').split('|').map((req, idx) => (
                                                 <li key={idx}>{req.trim()}</li>
                                             ))}
                                         </ul>
