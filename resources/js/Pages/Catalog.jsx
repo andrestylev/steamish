@@ -23,10 +23,12 @@ const SORT_OPTIONS = [
     { value: 'rating', label: 'Top Rated' },
 ];
 
-export default function Catalog({ games, genres, platforms, priceRange, ratings, filters: serverFilters }) {
+export default function Catalog({ games = [], genres, platforms, priceRange, ratings, filters: serverFilters }) {
     const [search, setSearch] = useState(serverFilters?.search || '');
     const [filters, setFilters] = useState(DEFAULT_FILTERS);
-    const [sort, setSort] = useState(serverFilters?.sort || '');
+    const [sortOrder, setSortOrder] = useState(serverFilters?.sort || '');
+
+    const safeGames = Array.isArray(games) ? games : [];
 
     const hasActiveFilters =
         filters.genres.length > 0 ||
@@ -39,7 +41,7 @@ export default function Catalog({ games, genres, platforms, priceRange, ratings,
     const serverComingSoon = serverFilters?.coming_soon;
 
     const filteredGames = useMemo(() => {
-        let result = [...games];
+        let result = [...safeGames];
 
         // Search
         if (search) {
@@ -82,8 +84,8 @@ export default function Catalog({ games, genres, platforms, priceRange, ratings,
         }
 
         // Apply sort
-        if (sort) {
-            switch (sort) {
+        if (sortOrder) {
+            switch (sortOrder) {
                 case 'name_asc':
                     result.sort((a, b) => a.title.localeCompare(b.title));
                     break;
@@ -109,7 +111,7 @@ export default function Catalog({ games, genres, platforms, priceRange, ratings,
         }
 
         return result;
-    }, [games, search, filters, sort]);
+    }, [safeGames, search, filters, sortOrder]);
 
     const clearFilters = () => {
         setFilters(DEFAULT_FILTERS);
@@ -145,7 +147,7 @@ export default function Catalog({ games, genres, platforms, priceRange, ratings,
                     <div className="col-lg-9">
                         <div className="d-flex align-items-center justify-content-between mb-3">
                             <p className="text-secondary small mb-0">
-                                Showing {filteredGames.length} of {games.length} games
+                                Showing {filteredGames.length} of {safeGames.length} games
                             </p>
 
                             {/* Sort Dropdown */}
@@ -157,8 +159,8 @@ export default function Catalog({ games, genres, platforms, priceRange, ratings,
                                     id="sort-select"
                                     className="form-select form-select-sm"
                                     style={{ width: 'auto' }}
-                                    value={sort}
-                                    onChange={(e) => setSort(e.target.value)}
+                                    value={sortOrder}
+                                    onChange={(e) => setSortOrder(e.target.value)}
                                 >
                                     {SORT_OPTIONS.map((opt) => (
                                         <option key={opt.value} value={opt.value}>
