@@ -243,9 +243,15 @@ body {
         }
     }
 
-    .footer-legal {
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
+    .footer-social-link {
         color: var(--steam-text-muted);
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.15s ease-in-out;
+
+        &:hover {
+            color: var(--steam-accent);
+        }
     }
 
     ul {
