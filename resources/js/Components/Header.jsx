@@ -128,9 +128,7 @@ export default function Header() {
                             <li className="nav-item">
                                 <Link href={route('cart.index')} className="nav-link position-relative">
                                     Cart
-                                    {cartCount > 0 && (
-                                        <span className="badge bg-accent ms-1">{cartCount}</span>
-                                    )}
+                                    <span className="badge bg-accent ms-1">{cartCount}</span>
                                 </Link>
                             </li>
                         </ul>
