@@ -63,7 +63,7 @@ export default function FilterSidebar({
 
             {/* Genre Filter */}
             <div className="mb-4">
-                <h6 className="text-uppercase small fw-bold text-secondary mb-2">Genre</h6>
+                <h6 className="text-uppercase small fw-bold text-light mb-2">Genre</h6>
                 <div className="d-flex flex-column gap-1">
                     {genres.map((genre) => (
                         <label key={genre} className="filter-checkbox d-flex align-items-center gap-2">
@@ -81,7 +81,7 @@ export default function FilterSidebar({
 
             {/* Price Range Slider */}
             <div className="mb-4">
-                <h6 className="text-uppercase small fw-bold text-secondary mb-2">
+                <h6 className="text-uppercase small fw-bold text-light mb-2">
                     Price: ${priceMin} — ${priceMax}
                 </h6>
                 <div className="price-slider-container">
@@ -119,7 +119,7 @@ export default function FilterSidebar({
 
             {/* Platform Filter */}
             <div className="mb-4">
-                <h6 className="text-uppercase small fw-bold text-secondary mb-2">Platform</h6>
+                <h6 className="text-uppercase small fw-bold text-light mb-2">Platform</h6>
                 <div className="d-flex flex-column gap-1">
                     {platforms.map((platform) => (
                         <label key={platform.value} className="filter-checkbox d-flex align-items-center gap-2">
@@ -137,7 +137,7 @@ export default function FilterSidebar({
 
             {/* Rating Filter */}
             <div className="mb-3">
-                <h6 className="text-uppercase small fw-bold text-secondary mb-2">Minimum Rating</h6>
+                <h6 className="text-uppercase small fw-bold text-light mb-2">Minimum Rating</h6>
                 <div className="d-flex flex-column gap-1">
                     {ratings.map((rating) => (
                         <button
