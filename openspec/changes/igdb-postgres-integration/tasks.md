@@ -35,8 +35,8 @@ Chain strategy: feature-branch-chain
 
 ## Phase 2: IGDB Integration
 
-- [ ] 2.1 Create `app/Services/IgdbClient.php` — Twitch OAuth (cache 60d, 401 refresh), RateLimiter 4 req/s, Apicalypse POST builder; genres(), platforms(), companies(), games() methods
-- [ ] 2.2 Create `app/Console/Commands/IgdbSyncCommand.php` — igdb:sync with step methods in entity dependency order, --game-limit=N, --fresh, upsert on igdb_id
+- [x] 2.1 Create `app/Services/IgdbClient.php` — Twitch OAuth (cache 60d, 401 refresh), RateLimiter 4 req/s, Apicalypse POST builder; genres(), platforms(), companies(), games(), covers(), screenshots() methods
+- [x] 2.2 Create `app/Console/Commands/IgdbSyncCommand.php` — igdb:sync with step methods in entity dependency order, --game-limit=N, --fresh, upsert on igdb_id; syncCovers(), syncScreenshots()
 
 ## Phase 3: Query Rewrites
 
@@ -52,8 +52,8 @@ Chain strategy: feature-branch-chain
 
 ## Phase 5: Testing
 
-- [ ] 5.1 Unit: IgdbClient token refresh, rate-limit enforcement, 429 backoff, missing-cred abort (mock Guzzle)
-- [ ] 5.2 Unit: IgdbSyncCommand --game-limit, --fresh, step skipping, progress output (Http::fake)
+- [x] 5.1 Unit: IgdbClient token refresh, rate-limit enforcement, 429 backoff, missing-cred abort (mock Guzzle); covers(), screenshots() endpoint tests
+- [x] 5.2 Unit: IgdbSyncCommand --game-limit, --fresh, step skipping, progress output, cover/screenshot sync flow (Http::fake)
 - [x] 5.3 Integration: pivot relationships (Game::genres, ->platforms, ->tags, ->companies) via RefreshDatabase
 - [x] 5.4 Feature: catalog filter returns correct results via whereHas on pivots
 - [x] 5.5 Feature: admin report revenueByGenre joins pivot; monthly sales works on both drivers; empty-state renders
