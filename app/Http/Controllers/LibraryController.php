@@ -30,7 +30,7 @@ class LibraryController extends Controller
         }
 
         // Try DB games first
-        $dbGames = Game::whereIn('id', $purchasedGameIds)->get();
+        $dbGames = Game::with('genres', 'platforms')->whereIn('id', $purchasedGameIds)->get();
         if ($dbGames->isNotEmpty()) {
             $games = $dbGames->map(function ($game) {
                 return [
@@ -39,7 +39,7 @@ class LibraryController extends Controller
                     'slug' => $game->slug,
                     'cover' => $game->cover,
                     'header' => $game->header,
-                    'genre' => $game->genres->first()?->name ?? $game->genre,
+                    'genre' => $game->genres?->first()?->name ?? $game->genre,
                     'developer' => $game->developer,
                     'price' => $game->price,
                     'is_discounted' => $game->is_discounted,
@@ -47,7 +47,7 @@ class LibraryController extends Controller
                     'discount_pct' => $game->discount_pct,
                     'rating_avg' => $game->rating_avg,
                     'rating_count' => $game->rating_count,
-                    'platforms' => $game->platforms->pluck('slug')->toArray(),
+                    'platforms' => $game->platforms?->pluck('slug')->toArray() ?? [],
                     'release_date' => $game->release_date,
                     'about' => $game->about,
                 ];
