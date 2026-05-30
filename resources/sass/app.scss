@@ -152,6 +152,7 @@ body {
         display: block;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
         border-radius: 2px;
+        z-index: 1030;
     }
 
     .dropdown-arrow {
@@ -368,6 +369,67 @@ body {
 }
 
 // =============================================================================
+// 11a. Game Carousel
+// =============================================================================
+.game-carousel {
+    .game-carousel-track {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;      /* Firefox */
+        -ms-overflow-style: none;  /* IE/Edge */
+        padding: 0.25rem 0;
+
+        &::-webkit-scrollbar {
+            display: none;          /* Chrome/Safari */
+        }
+    }
+
+    .game-carousel-card {
+        flex: 0 0 auto;
+        width: 200px;
+    }
+
+    .game-carousel-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 5;
+        width: 32px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.15s ease-in-out, background-color 0.15s ease-in-out;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.75);
+            opacity: 1 !important;
+        }
+    }
+
+    &:hover .game-carousel-arrow {
+        opacity: 0.8;
+    }
+
+    .game-carousel-arrow-left {
+        left: -16px;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .game-carousel-arrow-right {
+        right: -16px;
+        border-radius: 4px 0 0 4px;
+    }
+}
+
+// =============================================================================
 // 12. Catalog — Filter Sidebar
 // =============================================================================
 .filter-sidebar {
@@ -436,52 +498,6 @@ body {
         &:focus {
             border-color: var(--steam-accent);
             box-shadow: 0 0 0 0.2rem rgba(26, 159, 255, 0.25);
-        }
-    }
-}
-
-// =============================================================================
-// 14. Review Card
-// =============================================================================
-.review-card {
-    background-color: #1e3040;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: background-color 0.15s ease;
-
-    &:hover {
-        background-color: lighten(#1e3040, 2%);
-    }
-}
-
-.star-interactive {
-    &:hover {
-        color: #ffc107 !important;
-    }
-
-    &:focus-visible {
-        outline: 2px solid var(--steam-accent);
-        outline-offset: 2px;
-        border-radius: 2px;
-    }
-}
-
-// =============================================================================
-// 15. Responsive — minimum 320px viewport
-// =============================================================================
-@media (max-width: 576px) {
-    .container {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-    }
-
-    h1.display-4 {
-        font-size: 2rem;
-    }
-
-    .header {
-        .navbar-brand {
-            font-size: 1.1rem;
         }
     }
 }

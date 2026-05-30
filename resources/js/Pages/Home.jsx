@@ -1,14 +1,14 @@
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
 import HeroCarousel from '@/Components/HeroCarousel';
-import GameCard from '@/Components/GameCard';
+import GameCarousel from '@/Components/GameCarousel';
 
 export default function Home({ featuredGames, newReleases, topRated, comingSoon, onSale }) {
     const sections = [
-        { title: 'New Releases', games: newReleases, id: 'new-releases' },
+        { title: 'On Sale', games: onSale, id: 'on-sale' },
         { title: 'Top Rated', games: topRated, id: 'top-rated' },
         { title: 'Coming Soon', games: comingSoon, id: 'coming-soon' },
-        { title: 'On Sale', games: onSale, id: 'on-sale' },
+        { title: 'New Releases', games: newReleases, id: 'new-releases' },
     ];
 
     return (
@@ -28,13 +28,7 @@ export default function Home({ featuredGames, newReleases, topRated, comingSoon,
                                 View All &rarr;
                             </Link>
                         </div>
-                        <div className="row g-3">
-                            {section.games.map((game) => (
-                                <div key={game.id} className="col-6 col-sm-4 col-lg-2">
-                                    <GameCard game={game} />
-                                </div>
-                            ))}
-                        </div>
+                        <GameCarousel games={section.games} />
                     </section>
                 ))}
             </div>
